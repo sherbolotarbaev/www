@@ -1,11 +1,17 @@
 'use client'
 
+import * as React from 'react'
+
 import { siteConfig } from '~/config/site'
 
 import Image from 'next/image'
 import Link from 'next/link'
 
-const Logo = () => {
+interface LogoProps {
+	className?: string
+}
+
+const Logo: React.FC<LogoProps> = () => {
 	return (
 		<Link href='/'>
 			<Image
