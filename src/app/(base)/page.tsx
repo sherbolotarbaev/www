@@ -5,7 +5,7 @@ import WorkExperience from '~/components/sections/work-experience'
 export default function Home() {
 	return (
 		<>
-			<section className='pt-12 pb-8 flex flex-col gap-4'>
+			<section className='mt-12 flex flex-col gap-4'>
 				<Hero />
 				<WorkExperience />
 				<Projects />

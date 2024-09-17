@@ -13,6 +13,9 @@
 		--popover: 0 0% 100%;
 		--popover-foreground: 0 0% 3.9%;
 
+		--error: 0 90.6% 70.8%;
+		--error-foreground: 0 84.2% 60.2%;
+
 		--primary: 0 0% 9%;
 		--primary-foreground: 0 0% 98%;
 
@@ -45,6 +48,9 @@
 		--popover: 0 0% 3.9%;
 		--popover-foreground: 0 0% 98%;
 
+		--error: 0 90.6% 70.8%;
+		--error-foreground: 0 84.2% 60.2%;
+
 		--primary: 0 0% 98%;
 		--primary-foreground: 0 0% 9%;
 
@@ -75,5 +81,17 @@
 		font-feature-settings: 'rlig' 1, 'calt' 1;
 
 		min-width: 24rem;
+	}
+}
+
+@layer utilities {
+	.shad-otp {
+		@apply w-full flex justify-between px-5 !important;
+	}
+	.shad-otp-slot {
+		@apply justify-center flex border rounded-md size-10 !important;
+	}
+	.shad-otp-slot.error {
+		@apply border-red-400 ring-0 !important;
 	}
 }

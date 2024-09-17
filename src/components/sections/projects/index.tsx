@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { Badge } from 'ui/badge'
 import { Card, CardContent, CardFooter } from 'ui/card'
 
-import { Link1Icon } from '@radix-ui/react-icons'
+import { Link2Icon } from '@radix-ui/react-icons'
 
 import { type Project, projects } from './lib/projects'
 
@@ -84,7 +84,7 @@ const ProjectCard: React.FC<Project> = ({
 						target='_blank'
 						className='text-md text-blue-500 flex items-center gap-1'
 					>
-						<Link1Icon /> {url}
+						<Link2Icon /> {url}
 					</Link>
 				</CardFooter>
 			</Card>

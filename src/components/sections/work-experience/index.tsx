@@ -10,7 +10,7 @@ import { Badge } from 'ui/badge'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from 'ui/card'
 import { Separator } from 'ui/separator'
 
-import { Link1Icon } from '@radix-ui/react-icons'
+import { Link2Icon } from '@radix-ui/react-icons'
 
 import {
 	type Experience,
@@ -142,7 +142,7 @@ const ExperienceCard: React.FC<Experience> = ({
 					target='_blank'
 					className='text-md text-blue-500 flex items-center gap-1'
 				>
-					<Link1Icon /> {url}
+					<Link2Icon /> {url}
 				</Link>
 			</CardFooter>
 		</MotionCard>

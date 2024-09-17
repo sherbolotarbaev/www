@@ -1,3 +1,4 @@
+import Footer from 'widgets/footer'
 import Header from 'widgets/header'
 
 interface BaseLayoutProps {
@@ -9,6 +10,7 @@ export default function BaseLayout({ children }: Readonly<BaseLayoutProps>) {
 		<>
 			<Header />
 			<main>{children}</main>
+			<Footer />
 		</>
 	)
 }
