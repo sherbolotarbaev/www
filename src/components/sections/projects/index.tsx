@@ -54,7 +54,7 @@ const ProjectCard: React.FC<Project> = ({
 			transition={{ duration: 0.5 }}
 		>
 			<Card className='overflow-hidden h-full flex flex-col'>
-				<div className='relative h-72 w-full'>
+				<div className='relative h-56 w-full'>
 					<Image
 						src={image}
 						alt={title}
