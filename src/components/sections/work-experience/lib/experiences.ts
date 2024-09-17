@@ -1,18 +1,20 @@
 type Position = {
 	title: string
 	period: {
-		startDate: Date
-		endDate: Date | 'Present'
+		startDate: string | string
+		endDate: string | 'Present'
+		duration?: string
 	}
 	description: string
 	skills: string[]
 }
 
-type Experience = {
+export type Experience = {
 	company: string
 	duration: {
-		startDate: Date
-		endDate: Date | 'Present'
+		startDate: string
+		endDate: string | 'Present'
+		totalDuration?: string
 	}
 	location: string
 	positions: Position[]
@@ -21,12 +23,18 @@ type Experience = {
 export const experiences: Experience[] = [
 	{
 		company: 'WEDEVX',
-		duration: { startDate: new Date('2023-06-01'), endDate: 'Present' },
+		duration: {
+			startDate: '2023-06-01',
+			endDate: 'Present',
+		},
 		location: 'Chicago, Illinois, United States • Remote',
 		positions: [
 			{
 				title: 'Middle Software Development Engineer',
-				period: { startDate: new Date('2024-02-01'), endDate: 'Present' },
+				period: {
+					startDate: '2024-02-01',
+					endDate: 'Present',
+				},
 				description: `Led development of NestJS microservices, increasing system performance by 99% through batching and Prisma optimizations. Improved query efficiency by refining system architecture, reducing database processing time from 7 minutes to 7 seconds.`,
 				skills: [
 					'Systems Design',
@@ -43,8 +51,8 @@ export const experiences: Experience[] = [
 			{
 				title: 'Software Development Engineer',
 				period: {
-					startDate: new Date('2023-06-01'),
-					endDate: new Date('2024-02-01'),
+					startDate: '2023-06-01',
+					endDate: '2024-02-01',
 				},
 				description: `At WEDEVX, I played a key role in architecting and optimizing backend systems for a tech-focused educational platform, designed to empower individuals with the skills to secure high-paying tech jobs. 
 
@@ -69,16 +77,16 @@ export const experiences: Experience[] = [
 	{
 		company: 'Mancho',
 		duration: {
-			startDate: new Date('2021-05-01'),
-			endDate: new Date('2023-05-01'),
+			startDate: '2021-05-01',
+			endDate: '2023-05-01',
 		},
 		location: 'Bishkek, Kyrgyzstan',
 		positions: [
 			{
 				title: 'NodeJS Backend Developer',
 				period: {
-					startDate: new Date('2022-09-01'),
-					endDate: new Date('2023-05-01'),
+					startDate: '2022-09-01',
+					endDate: '2023-05-01',
 				},
 				description: `Developed scalable Node.js backend services and RESTful APIs, optimizing performance and ensuring reliable database integration.`,
 				skills: [
@@ -95,8 +103,8 @@ export const experiences: Experience[] = [
 			{
 				title: 'Frontend Developer',
 				period: {
-					startDate: new Date('2021-08-01'),
-					endDate: new Date('2022-09-01'),
+					startDate: '2021-08-01',
+					endDate: '2022-09-01',
 				},
 				description: `Optimized cross-platform websites with React, Next.js, and TypeScript, improving performance by 40%. Applied caching strategies to reduce page load times.`,
 				skills: ['React', 'Next.js', 'Redux', 'TypeScript'],
@@ -104,8 +112,8 @@ export const experiences: Experience[] = [
 			{
 				title: 'Intern Frontend Developer',
 				period: {
-					startDate: new Date('2021-05-01'),
-					endDate: new Date('2021-08-01'),
+					startDate: '2021-05-01',
+					endDate: '2021-08-01',
 				},
 				description: `Assisted in frontend development with React and JavaScript, gaining hands-on experience with modern practices.`,
 				skills: ['TypeScript', 'React'],
@@ -146,12 +154,12 @@ const formatDate = (date: Date | 'Present') => {
 export const formatExperiences = (experiences: Experience[]) => {
 	return experiences.map(experience => {
 		const updatedPositions = experience.positions.map(position => {
-			const startDate = position.period.startDate
+			const startDate = new Date(position.period.startDate)
 			const endDate =
 				position.period.endDate === 'Present'
 					? new Date()
-					: position.period.endDate
-			const duration = calculateDuration(startDate, endDate as Date)
+					: new Date(position.period.endDate)
+			const duration = calculateDuration(new Date(startDate), endDate as Date)
 
 			return {
 				...position,
@@ -163,11 +171,11 @@ export const formatExperiences = (experiences: Experience[]) => {
 			}
 		})
 
-		const startDate = experience.duration.startDate
+		const startDate = new Date(experience.duration.startDate)
 		const endDate =
 			experience.duration.endDate === 'Present'
 				? new Date()
-				: experience.duration.endDate
+				: new Date(experience.duration.endDate)
 		const totalDuration = calculateDuration(startDate, endDate as Date)
 
 		return {

@@ -17,22 +17,23 @@ const Hero = () => {
 				<motion.div
 					initial={{ scale: 0.5, opacity: 0 }}
 					animate={{ scale: 1, opacity: 1 }}
-					transition={{ duration: 0.5 }}
+					transition={{ duration: 0.3 }}
 				>
 					<Avatar className='h-20 w-20 ring-4 ring-background'>
 						<AvatarImage
 							src='https://ca.slack-edge.com/T01Q61HBB09-U05AFFV5LUX-83ddcc053149-512'
 							alt='Sher Arbaev'
+							loading='lazy'
 						/>
 						<AvatarFallback>SA</AvatarFallback>
 					</Avatar>
 				</motion.div>
 
-				<div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 mt-4'>
+				<div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-4 mt-4'>
 					<motion.div
 						initial={{ y: 20, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.5, delay: 0.2 }}
+						transition={{ duration: 0.3, delay: 0.2 }}
 					>
 						<h1 className='text-2xl font-bold'>Sher Arbaev</h1>
 						<p className='text-muted-foreground'>
@@ -43,8 +44,8 @@ const Hero = () => {
 					<motion.div
 						initial={{ y: 20, opacity: 0 }}
 						animate={{ y: 0, opacity: 1 }}
-						transition={{ duration: 0.5, delay: 0.4 }}
-						className='flex space-x-2 mt-4 sm:mt-0'
+						transition={{ duration: 0.4, delay: 0.2 }}
+						className='flex space-x-2 mt-3 md:mt-0'
 					>
 						{socialMedia.map(({ icon, href }, index) => (
 							<Button
@@ -64,7 +65,7 @@ const Hero = () => {
 				<motion.div
 					initial={{ y: 20, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.3 }}
+					transition={{ duration: 0.3, delay: 0.2 }}
 				>
 					<p className='text-sm mb-4'>
 						I'm a software engineer from Kyrgyzstan 🇰🇬. I'm fascinated by
@@ -76,7 +77,7 @@ const Hero = () => {
 				<motion.div
 					initial={{ y: 20, opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
-					transition={{ duration: 0.5, delay: 0.5 }}
+					transition={{ duration: 0.3, delay: 0.3 }}
 					className='flex flex-wrap gap-2 mb-4'
 				>
 					{skills.map(({ name, icon }, index) => (

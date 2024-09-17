@@ -1,4 +1,4 @@
-type Project = {
+export type Project = {
 	title: string
 	description: string
 	tags: string[]
@@ -19,7 +19,6 @@ export const projects: Project[] = [
 			'Passport.js',
 			'Express session',
 		],
-		image:
-			'https://images.ctfassets.net/23aumh6u8s0i/3tHY60ojECLh9u8kVcXOpb/88988dbac7f8b907deb2e209e58adacb/nestjs',
+		image: '/images/nestjs.png',
 	},
 ]

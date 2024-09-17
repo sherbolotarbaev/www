@@ -4,9 +4,7 @@ interface BaseLayoutProps {
 	children: React.ReactNode
 }
 
-export default async function BaseLayout({
-	children,
-}: Readonly<BaseLayoutProps>) {
+export default function BaseLayout({ children }: Readonly<BaseLayoutProps>) {
 	return (
 		<>
 			<Header />

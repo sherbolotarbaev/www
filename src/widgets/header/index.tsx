@@ -18,7 +18,14 @@ const Header = () => {
 
 				<div className='flex flex-1 items-center justify-end'>
 					<nav className='flex items-center gap-4'>
-						<Button>Download CV</Button>
+						<Button
+							onClick={() => {
+								if (typeof window !== undefined)
+									window.open('/cv/sherbolot-arbaev.pdf', '_blank')
+							}}
+						>
+							Download CV
+						</Button>
 						<MobileMenu />
 
 						<div className='hidden md:block'>

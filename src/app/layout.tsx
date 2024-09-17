@@ -50,16 +50,18 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
 	return (
-		<html lang='en'>
-			<body
-				className={cn(
-					'min-h-screen bg-dark-300 font-sans antialiased',
-					geistSans.variable,
-					geistMono.variable
-				)}
-			>
-				<Providers>{children}</Providers>
-			</body>
-		</html>
+		<>
+			<html lang='en'>
+				<body
+					className={cn(
+						'min-h-screen bg-dark-300 font-sans antialiased',
+						geistSans.variable,
+						geistMono.variable
+					)}
+				>
+					<Providers>{children}</Providers>
+				</body>
+			</html>
+		</>
 	)
 }
