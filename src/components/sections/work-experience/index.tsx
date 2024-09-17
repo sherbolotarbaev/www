@@ -5,9 +5,12 @@ import * as React from 'react'
 import { motion } from 'framer-motion'
 import { useIntersectionObserver } from 'shared/hooks/use-Intersection-observer'
 
+import Link from 'next/link'
 import { Badge } from 'ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from 'ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from 'ui/card'
 import { Separator } from 'ui/separator'
+
+import { Link1Icon } from '@radix-ui/react-icons'
 
 import {
 	type Experience,
@@ -54,7 +57,7 @@ const WorkExperience = () => {
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
 			>
-				My experience 🧠
+				Experience 🧠
 			</motion.h2>
 
 			<motion.div
@@ -76,6 +79,7 @@ const ExperienceCard: React.FC<Experience> = ({
 	company,
 	duration,
 	location,
+	url,
 	positions,
 }) => {
 	const [cardRef, isCardVisible] = useIntersectionObserver<HTMLDivElement>()
@@ -83,7 +87,7 @@ const ExperienceCard: React.FC<Experience> = ({
 	return (
 		<MotionCard
 			ref={cardRef}
-			className='border-none shadow-none cursor-pointer'
+			className='border-none shadow-none'
 			variants={cardVariants}
 			initial='hidden'
 			animate={isCardVisible ? 'visible' : 'hidden'}
@@ -99,13 +103,13 @@ const ExperienceCard: React.FC<Experience> = ({
 			</CardHeader>
 
 			<motion.div variants={contentVariants}>
-				<CardContent className='px-0'>
-					{positions.map(({ title, period, description, skills }, posIndex) => (
+				<CardContent className='px-0 py-0'>
+					{positions.map(({ title, period, description, skills }, index) => (
 						<motion.div
-							key={posIndex}
+							key={index}
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
-							transition={{ delay: 0.2 * posIndex }}
+							transition={{ delay: 0.2 * index }}
 						>
 							<h3 className='text-lg font-semibold'>{title}</h3>
 							<p className='text-sm text-muted-foreground mb-2'>
@@ -126,13 +130,21 @@ const ExperienceCard: React.FC<Experience> = ({
 								))}
 							</div>
 
-							{posIndex < positions.length - 1 && (
-								<Separator className='my-5' />
-							)}
+							{index < positions.length - 1 && <Separator className='my-5' />}
 						</motion.div>
 					))}
 				</CardContent>
 			</motion.div>
+
+			<CardFooter className='px-0'>
+				<Link
+					href={url}
+					target='_blank'
+					className='text-md text-blue-500 flex items-center gap-1'
+				>
+					<Link1Icon /> {url}
+				</Link>
+			</CardFooter>
 		</MotionCard>
 	)
 }

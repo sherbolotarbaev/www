@@ -6,8 +6,11 @@ import { motion } from 'framer-motion'
 import { useIntersectionObserver } from 'shared/hooks/use-Intersection-observer'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Badge } from 'ui/badge'
-import { Card, CardContent } from 'ui/card'
+import { Card, CardContent, CardFooter } from 'ui/card'
+
+import { Link1Icon } from '@radix-ui/react-icons'
 
 import { type Project, projects } from './lib/projects'
 
@@ -39,6 +42,7 @@ const ProjectCard: React.FC<Project> = ({
 	title,
 	description,
 	tags,
+	url,
 }) => {
 	const [ref, isVisible] = useIntersectionObserver<HTMLDivElement>()
 
@@ -73,6 +77,16 @@ const ProjectCard: React.FC<Project> = ({
 						))}
 					</div>
 				</CardContent>
+
+				<CardFooter>
+					<Link
+						href={url}
+						target='_blank'
+						className='text-md text-blue-500 flex items-center gap-1'
+					>
+						<Link1Icon /> {url}
+					</Link>
+				</CardFooter>
 			</Card>
 		</motion.div>
 	)

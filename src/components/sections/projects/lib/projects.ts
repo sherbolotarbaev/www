@@ -3,6 +3,7 @@ export type Project = {
 	description: string
 	tags: string[]
 	image: string
+	url: string
 }
 
 export const projects: Project[] = [
@@ -20,5 +21,6 @@ export const projects: Project[] = [
 			'Express session',
 		],
 		image: '/images/nestjs.png',
+		url: 'https://github.com/sherbolotarbaev/api',
 	},
 ]

@@ -18,6 +18,7 @@ export type Experience = {
 	}
 	location: string
 	positions: Position[]
+	url: string
 }
 
 export const experiences: Experience[] = [
@@ -28,6 +29,7 @@ export const experiences: Experience[] = [
 			endDate: 'Present',
 		},
 		location: 'Chicago, Illinois, United States • Remote',
+		url: 'https://www.wedevx.co',
 		positions: [
 			{
 				title: 'Middle Software Development Engineer',
@@ -81,6 +83,7 @@ export const experiences: Experience[] = [
 			endDate: '2023-05-01',
 		},
 		location: 'Bishkek, Kyrgyzstan',
+		url: 'https://www.mancho.dev',
 		positions: [
 			{
 				title: 'NodeJS Backend Developer',
@@ -116,7 +119,7 @@ export const experiences: Experience[] = [
 					endDate: '2021-08-01',
 				},
 				description: `Assisted in frontend development with React and JavaScript, gaining hands-on experience with modern practices.`,
-				skills: ['TypeScript', 'React'],
+				skills: ['TypeScript', 'React', 'SASS'],
 			},
 		],
 	},
