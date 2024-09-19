@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react'
+import React from 'react'
 
 import { siteConfig } from '~/config/site'
 
@@ -19,7 +19,7 @@ const Logo: React.FC<LogoProps> = () => {
 				alt={siteConfig.title}
 				width={1000}
 				height={1000}
-				className='h-8 w-8 max-w-8'
+				className='size-8 max-w-8'
 				loading='lazy'
 				placeholder='blur'
 				blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAT0lEQVR4nAFEALv/AAAAAADJyckztra2RgAAAAIAxMTEP+Li4vb9/f3/xsbGgwDDw8OK6+vr/83Nze2YmJiDAFxcXBtqampdQEBAGwAAAACyHSHCm4RaSAAAAABJRU5ErkJggg=='

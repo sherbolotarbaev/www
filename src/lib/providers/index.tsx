@@ -1,7 +1,8 @@
 'use client'
 
-import * as React from 'react'
+import React from 'react'
 
+import ReduxProvider from './redux'
 import ThemeProvider from './theme'
 
 interface ProvidersProps {
@@ -11,14 +12,16 @@ interface ProvidersProps {
 const Providers: React.FC<ProvidersProps> = ({ children }) => {
 	return (
 		<>
-			<ThemeProvider
-				attribute='class'
-				defaultTheme='system'
-				enableSystem
-				disableTransitionOnChange
-			>
-				{children}
-			</ThemeProvider>
+			<ReduxProvider>
+				<ThemeProvider
+					attribute='class'
+					defaultTheme='system'
+					enableSystem
+					disableTransitionOnChange
+				>
+					{children}
+				</ThemeProvider>
+			</ReduxProvider>
 		</>
 	)
 }

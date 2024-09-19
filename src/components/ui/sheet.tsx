@@ -1,7 +1,7 @@
 'use client'
 
 import * as SheetPrimitive from '@radix-ui/react-dialog'
-import * as React from 'react'
+import React from 'react'
 
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { cva, type VariantProps } from 'class-variance-authority'
@@ -66,7 +66,7 @@ const SheetContent = React.forwardRef<
 			{...props}
 		>
 			<SheetPrimitive.Close className='absolute right-6 top-7 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-secondary'>
-				<Cross2Icon className='h-5 w-5' />
+				<Cross2Icon className='size-5' />
 				<span className='sr-only'>Close</span>
 			</SheetPrimitive.Close>
 			{children}

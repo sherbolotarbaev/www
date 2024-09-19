@@ -7,15 +7,15 @@ type SocialMedia = {
 
 export const socialMedia: SocialMedia[] = [
 	{
-		icon: <Mail className='h-4 w-4' />,
+		icon: <Mail className='size-4' />,
 		href: 'mailto:sherbolot@wedevx.co',
 	},
 	{
-		icon: <Github className='h-4 w-4' />,
+		icon: <Github className='size-4' />,
 		href: 'https://github.com/sherbolotarbaev',
 	},
 	{
-		icon: <Linkedin className='h-4 w-4' />,
+		icon: <Linkedin className='size-4' />,
 		href: 'https://www.linkedin.com/in/sherbolotarbaev',
 	},
 ]

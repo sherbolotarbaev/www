@@ -19,7 +19,7 @@ const Hero = () => {
 					animate={{ scale: 1, opacity: 1 }}
 					transition={{ duration: 0.3 }}
 				>
-					<Avatar className='h-20 w-20 ring-4 ring-background'>
+					<Avatar className='size-20 ring-4 ring-background'>
 						<AvatarImage
 							src='https://ca.slack-edge.com/T01Q61HBB09-U05AFFV5LUX-83ddcc053149-512'
 							alt='Sher Arbaev'

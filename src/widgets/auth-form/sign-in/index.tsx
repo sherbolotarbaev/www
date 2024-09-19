@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import * as z from 'zod'
 
 import {
 	Card,
@@ -15,16 +14,9 @@ import EmailForm from './ui/email-form'
 import OtpForm from './ui/otp-form'
 import SocialButtons from './ui/social-buttons'
 
-import { EmailFormSchema } from './lib/schema'
-
-const SignInForm = () => {
+export const SignInForm = () => {
 	const [step, setStep] = useState<'email' | 'otp'>('email')
 	const [email, setEmail] = useState('')
-
-	const onSubmit = (data: z.infer<typeof EmailFormSchema>) => {
-		setEmail(data.email)
-		setStep('otp')
-	}
 
 	return (
 		<Card className='w-full max-w-sm mx-auto border-none shadow-none'>
@@ -38,12 +30,13 @@ const SignInForm = () => {
 					</CardDescription>
 				)}
 			</CardHeader>
+
 			<CardContent>
 				{step === 'email' ? (
 					<>
 						<SocialButtons />
 						<Separator className='my-6' />
-						<EmailForm onSubmit={onSubmit} />
+						<EmailForm setStep={setStep} setEmail={setEmail} />
 					</>
 				) : (
 					<OtpForm email={email} />
@@ -53,5 +46,3 @@ const SignInForm = () => {
 		</Card>
 	)
 }
-
-export default SignInForm

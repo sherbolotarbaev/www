@@ -1,6 +1,6 @@
 import './globals.css'
 
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { siteConfig } from '~/config/site'
 
 import Providers from 'providers'
@@ -42,6 +42,12 @@ export const metadata: Metadata = {
 			'max-snippet': -1,
 		},
 	},
+}
+
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: 'device-width',
+	maximumScale: 1,
 }
 
 interface RootLayoutProps {

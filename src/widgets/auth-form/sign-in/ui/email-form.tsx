@@ -1,28 +1,45 @@
 'use client'
 
-import * as React from 'react'
+import React, { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSendOtpMutation } from 'api/auth'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { Button } from 'ui/button'
+import SubmitButton from 'shared/ui/submit.button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from 'ui/form'
 import { Input } from 'ui/input'
 
-import { Mail } from 'lucide-react'
+import { CircleAlert, Mail } from 'lucide-react'
 
 import { cn } from 'utils'
 import { EmailFormSchema } from '../lib/schema'
 
 interface EmailFormProps {
-	onSubmit: (data: z.infer<typeof EmailFormSchema>) => void
+	setStep: (step: 'email' | 'otp') => void
+	setEmail: (email: string) => void
 }
 
-const EmailForm: React.FC<EmailFormProps> = ({ onSubmit }) => {
+const EmailForm: React.FC<EmailFormProps> = ({ setStep, setEmail }) => {
+	const [error, setError] = useState('')
+	const [sendOtp, { isLoading, isSuccess }] = useSendOtpMutation()
+
 	const form = useForm<z.infer<typeof EmailFormSchema>>({
 		resolver: zodResolver(EmailFormSchema),
 	})
+
+	const onSubmit = async (data: z.infer<typeof EmailFormSchema>) => {
+		setError('')
+
+		try {
+			const response = await sendOtp(data).unwrap()
+			setEmail(response.email)
+			setStep('otp')
+		} catch (error: any) {
+			setError(error.data?.message || 'Something went wrong. Try again later.')
+		}
+	}
 
 	return (
 		<Form {...form}>
@@ -32,26 +49,38 @@ const EmailForm: React.FC<EmailFormProps> = ({ onSubmit }) => {
 					name='email'
 					render={({ field }) => (
 						<FormItem>
-							<FormControl>
+							<FormControl onChange={() => setError('')}>
 								<Input
 									type='email'
 									className={cn(
-										form.formState.errors.email && 'focus-visible:ring-error'
+										form.formState.errors.email && 'focus-visible:ring-error',
+										'h-11 py-5 text-md rounded-lg'
 									)}
 									placeholder='Email Address'
+									disabled={isLoading || isSuccess}
 									{...field}
 								/>
 							</FormControl>
-							{/* <FormDescription>
-								We'll send you a one-time password to this email.
-							</FormDescription> */}
-							<FormMessage className='text-error' />
+
+							{error ? (
+								<FormMessage className='text-error text-center flex items-center gap-1'>
+									<CircleAlert className='size-4' /> {error}
+								</FormMessage>
+							) : (
+								<FormMessage className='text-error' />
+							)}
 						</FormItem>
 					)}
 				/>
-				<Button type='submit' className='w-full'>
-					<Mail className='mr-2 h-4 w-4' /> Continue with Email
-				</Button>
+
+				<SubmitButton
+					isLoading={isLoading}
+					disabled={isSuccess}
+					loadingText='Continue with Email'
+					size='lg'
+				>
+					<Mail className='size-4 mr-2' /> Continue with Email
+				</SubmitButton>
 			</form>
 		</Form>
 	)

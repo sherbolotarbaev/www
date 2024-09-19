@@ -1,4 +1,4 @@
-import SignInForm from 'widgets/auth-form/sign-in'
+import { SignInForm } from 'widgets/auth-form'
 
 export default function SignIn() {
 	return (

@@ -1,8 +1,9 @@
 'use client'
 
-import * as React from 'react'
+import React, { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSignInMutation } from 'api/auth'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -11,7 +12,7 @@ import { Button } from 'ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from 'ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from 'ui/input-otp'
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CircleAlert } from 'lucide-react'
 
 import { cn } from 'utils'
 import { OtpFormSchema } from '../lib/schema'
@@ -21,13 +22,25 @@ interface OtpFormProps {
 }
 
 const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
+	const [error, setError] = useState('')
+	const [signIn, { isLoading }] = useSignInMutation()
+
 	const form = useForm<z.infer<typeof OtpFormSchema>>({
 		resolver: zodResolver(OtpFormSchema),
 	})
 
-	const onSubmit = (data: z.infer<typeof OtpFormSchema>) => {
-		// Here you would typically verify the OTP
-		alert(`OTP submitted: ${data.otp}`)
+	const onSubmit = async ({ otp }: z.infer<typeof OtpFormSchema>) => {
+		setError('')
+
+		try {
+			await signIn({
+				email,
+				otp,
+			}).unwrap()
+			if (typeof window !== undefined) window.location.reload()
+		} catch (error: any) {
+			setError(error.data?.message)
+		}
 	}
 
 	return (
@@ -38,20 +51,20 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 					name='otp'
 					render={({ field }) => (
 						<FormItem>
-							<FormControl>
+							<FormControl onChange={() => setError('')}>
 								<InputOTP
 									{...field}
 									maxLength={6}
 									pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
 									onComplete={otp => onSubmit({ otp })}
-									// disabled={isLoading}
+									disabled={isLoading}
 									render={({ slots }) => (
 										<InputOTPGroup className='shad-otp'>
 											{slots.map((slot, index) => (
 												<InputOTPSlot
 													key={index}
 													className={cn(
-														form.formState.errors.otp && 'error',
+														(form.formState.errors.otp || error) && 'error',
 														'shad-otp-slot'
 													)}
 													{...slot}
@@ -61,7 +74,14 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 									)}
 								/>
 							</FormControl>
-							<FormMessage className='text-error text-center' />
+
+							{error ? (
+								<FormMessage className='text-error flex justify-center gap-1'>
+									<CircleAlert className='pt-0.5 size-4' /> {error}
+								</FormMessage>
+							) : (
+								<FormMessage className='text-error text-center' />
+							)}
 						</FormItem>
 					)}
 				/>
@@ -71,10 +91,10 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 					onClick={() => {
 						if (typeof window !== undefined) window.location.reload()
 					}}
-					className='w-full flex items-center gap-1 justify-center text-sm text-blue-500'
+					className='w-full flex items-center gap-1 justify-center text-sm text-blue-500 hover:no-underline'
 				>
-					<ArrowLeft size={16} />
-					Go back
+					<ArrowLeft className='size-5' />
+					Back
 				</Button>
 			</form>
 		</Form>
