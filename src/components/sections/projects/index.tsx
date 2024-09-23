@@ -16,7 +16,7 @@ import { type Project, projects } from './lib/projects'
 
 const Projects = () => {
 	return (
-		<div className='container mx-auto px-4'>
+		<div>
 			<motion.h2
 				className='text-2xl font-bold mb-8'
 				initial={{ opacity: 0, y: -20 }}

@@ -9,7 +9,7 @@ export default function BaseLayout({ children }: Readonly<BaseLayoutProps>) {
 	return (
 		<>
 			<Header />
-			<main>{children}</main>
+			<main className='my-12'>{children}</main>
 			<Footer />
 		</>
 	)

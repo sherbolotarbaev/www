@@ -1,9 +1,11 @@
 'use client'
 
 import { useLogoutMutation } from 'api/auth'
+import { LogOut, Monitor, Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import React from 'react'
 
+import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from 'ui/avatar'
 import { Button } from 'ui/button'
 import {
@@ -14,10 +16,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from 'ui/dropdown-menu'
-import { ToggleGroup, ToggleGroupItem } from 'ui/toggle-group'
 
-import { LogOut, Monitor, Moon, Sun } from 'lucide-react'
-import { cn } from '~/lib/utils'
+import { cn } from 'utils'
 
 interface UserNavProps {
 	me: User
@@ -25,14 +25,13 @@ interface UserNavProps {
 
 const UserNav: React.FC<UserNavProps> = ({ me }) => {
 	const { setTheme, theme } = useTheme()
-
 	const [logOut, { isLoading: isLoggingOut }] = useLogoutMutation()
 
 	const handleLogout = async () => {
 		try {
 			await logOut().unwrap()
 		} catch (_) {}
-		if (typeof window !== undefined) window.location.reload()
+		if (typeof window !== 'undefined') window.location.reload()
 	}
 
 	return (
@@ -57,11 +56,11 @@ const UserNav: React.FC<UserNavProps> = ({ me }) => {
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
-				className='w-56 mt-2 rounded-lg hidden md:block'
+				className='min-w-56 mt-1 hidden md:block'
 				align='end'
 			>
-				<DropdownMenuLabel className='font-normal'>
-					<div className='flex flex-col space-y-1'>
+				<DropdownMenuLabel className='font-normal p-3'>
+					<div className='space-y-1'>
 						<p className='text-sm font-medium leading-none'>
 							{me.name} {me.surname}
 						</p>
@@ -73,77 +72,78 @@ const UserNav: React.FC<UserNavProps> = ({ me }) => {
 
 				<DropdownMenuSeparator />
 
-				<DropdownMenuItem className='cursor-default focus:bg-transparent'>
-					<span className='flex items-center'>Theme</span>
-					<div className='ml-auto'>
-						<ToggleGroup
-							type='single'
-							value={theme}
-							onValueChange={setTheme}
-							className={cn(
-								theme === 'light'
-									? 'border-neutral-300'
-									: 'border-neutral-700 ',
-								'border border-spacing-4 rounded-full p-0.5'
-							)}
-							size='sm'
-						>
-							<ModeToggleItem
-								icon={<Sun className='size-4' />}
-								name='light'
-								label='Light mode'
+				<Link href='/account'>
+					<DropdownMenuItem>Account</DropdownMenuItem>
+				</Link>
+
+				<DropdownMenuItem className='cursor-default focus:bg-transparent focus:text-muted-foreground'>
+					<div className='flex items-center justify-between w-full'>
+						<span className='text-sm'>Theme</span>
+						<fieldset className='rounded-full flex border border-spacing-0.5'>
+							<ThemeToggleButton
+								theme='system'
+								icon={<Monitor className='size-3.5' />}
+								label='System theme'
 							/>
-							<ModeToggleItem
-								icon={<Monitor className='size-4' />}
-								name='system'
-								label='System mode'
+							<ThemeToggleButton
+								theme='light'
+								icon={<Sun className='size-3.5' />}
+								label='Light theme'
 							/>
-							<ModeToggleItem
-								icon={<Moon className='size-4' />}
-								name='dark'
-								label='Dark mode'
+							<ThemeToggleButton
+								theme='dark'
+								icon={<Moon className='size-3.5' />}
+								label='Dark theme'
 							/>
-						</ToggleGroup>
+						</fieldset>
 					</div>
 				</DropdownMenuItem>
 
 				<DropdownMenuSeparator />
 
 				<DropdownMenuItem
-					className='rounded-lg'
+					className='flex items-center justify-between'
 					disabled={isLoggingOut}
 					onClick={handleLogout}
 				>
-					<LogOut className='mr-2 h-4 w-4' />
 					<span>{isLoggingOut ? 'Logging out...' : 'Log Out'}</span>
+					<LogOut className='size-4' />
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
 }
 
-export default UserNav
-
-interface ModeToggleItemProps {
+interface ThemeToggleButtonProps {
+	theme: 'system' | 'light' | 'dark'
 	icon: React.ReactElement
-	name: string
 	label: string
 }
 
-const ModeToggleItem: React.FC<ModeToggleItemProps> = ({
+const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
+	theme,
 	icon,
-	name,
 	label,
 }) => {
+	const { setTheme, theme: currentTheme } = useTheme()
+
 	return (
-		<ToggleGroupItem
-			value={name}
-			aria-label={label}
-			className='size-5 p-0 rounded-full bg-transparent hover:text-primary text-neutral-500 data-[state=on]:text-primary'
-			size='sm'
+		<Button
+			variant='ghost'
+			size='icon'
+			className={cn(
+				'size-6 rounded-full text-muted-foreground',
+				currentTheme === theme
+					? 'bg-secondary text-primary'
+					: 'hover:bg-transparent'
+			)}
+			onClick={() => setTheme(theme)}
 		>
-			{icon}
-		</ToggleGroupItem>
+			{React.cloneElement(icon, {
+				className: icon.props.className,
+			})}
+			<span className='sr-only'>{label}</span>
+		</Button>
 	)
 }
 
@@ -161,7 +161,7 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 		<div className='mt-5'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center space-x-4'>
-					<Avatar className='h-10 w-10'>
+					<Avatar className='size-10'>
 						<AvatarImage src={me.photo} alt={`${me.name} ${me.surname}`} />
 						<AvatarFallback>
 							{me.name[0]}
@@ -176,9 +176,11 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 				</div>
 
 				<Button variant='ghost' disabled={isLoggingOut} onClick={handleLogout}>
-					<LogOut className='h-4 w-4' />
+					<LogOut className='size-4' />
 				</Button>
 			</div>
 		</div>
 	)
 }
+
+export default UserNav

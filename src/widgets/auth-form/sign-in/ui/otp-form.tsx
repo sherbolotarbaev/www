@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,22 +9,26 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'
-import { Button } from 'ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from 'ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from 'ui/input-otp'
 
 import { ArrowLeft, CircleAlert } from 'lucide-react'
 
+import Link from 'next/link'
 import { cn } from 'utils'
 import { OtpFormSchema } from '../lib/schema'
 
 interface OtpFormProps {
 	email: string
+	setStep: (step: 'email' | 'otp') => void
 }
 
-const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
+const OtpForm: React.FC<OtpFormProps> = ({ email, setStep }) => {
+	const searchParams = useSearchParams()
+	const next = searchParams.get('next') || '/'
+
 	const [error, setError] = useState('')
-	const [signIn, { isLoading }] = useSignInMutation()
+	const [signIn, { isLoading, isSuccess }] = useSignInMutation()
 
 	const form = useForm<z.infer<typeof OtpFormSchema>>({
 		resolver: zodResolver(OtpFormSchema),
@@ -37,7 +42,7 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 				email,
 				otp,
 			}).unwrap()
-			if (typeof window !== undefined) window.location.reload()
+			if (typeof window !== undefined) window.location.replace(next)
 		} catch (error: any) {
 			setError(error.data?.message)
 		}
@@ -45,7 +50,7 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 
 	return (
 		<Form {...form}>
-			<form className='flex flex-col gap-8 space-y-4'>
+			<form className='space-y-4'>
 				<FormField
 					control={form.control}
 					name='otp'
@@ -57,7 +62,7 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 									maxLength={6}
 									pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
 									onComplete={otp => onSubmit({ otp })}
-									disabled={isLoading}
+									disabled={isLoading || isSuccess}
 									render={({ slots }) => (
 										<InputOTPGroup className='shad-otp'>
 											{slots.map((slot, index) => (
@@ -82,20 +87,24 @@ const OtpForm: React.FC<OtpFormProps> = ({ email }) => {
 							) : (
 								<FormMessage className='text-error text-center' />
 							)}
+
+							{isSuccess && (
+								<FormMessage className='text-center text-green-400'>
+									Successfully verified. Redirecting...
+								</FormMessage>
+							)}
 						</FormItem>
 					)}
 				/>
 
-				<Button
-					variant='link'
-					onClick={() => {
-						if (typeof window !== undefined) window.location.reload()
-					}}
-					className='w-full flex items-center gap-1 justify-center text-sm text-blue-500 hover:no-underline'
+				<Link
+					href={next === '/' ? '/sign-in' : `/sign-in?next=${next}`}
+					onClick={() => setStep('email')}
+					className='w-full flex items-center gap-1 justify-center text-sm text-blue-500'
 				>
 					<ArrowLeft className='size-5' />
 					Back
-				</Button>
+				</Link>
 			</form>
 		</Form>
 	)

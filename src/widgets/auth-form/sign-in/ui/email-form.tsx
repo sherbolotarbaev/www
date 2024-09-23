@@ -58,6 +58,7 @@ const EmailForm: React.FC<EmailFormProps> = ({ setStep, setEmail }) => {
 									)}
 									placeholder='Email Address'
 									disabled={isLoading || isSuccess}
+									autoComplete='email'
 									{...field}
 								/>
 							</FormControl>

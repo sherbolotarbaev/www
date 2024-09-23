@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next'
 import { siteConfig } from '~/config/site'
 
 import Providers from 'providers'
+import { Toaster } from 'ui/toaster'
 import { cn } from 'utils'
 
 import localFont from 'next/font/local'
@@ -21,7 +22,10 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-	title: siteConfig.title,
+	title: {
+		default: siteConfig.title,
+		template: `%s | ${siteConfig.title}`,
+	},
 	description: siteConfig.description,
 	openGraph: {
 		title: siteConfig.title,
@@ -66,6 +70,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
 					)}
 				>
 					<Providers>{children}</Providers>
+					<Toaster />
 				</body>
 			</html>
 		</>

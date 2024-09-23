@@ -1,26 +1,32 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { Button } from 'ui/button'
 
-import { Github } from 'lucide-react'
-import { FaGoogle } from 'react-icons/fa'
+import { FaGithub, FaGoogle } from 'react-icons/fa'
 
 const SocialButtons = () => {
+	const router = useRouter()
+
+	const handleOAuthRedirect = (path: string) =>
+		router.push(`${process.env.NEXT_PUBLIC_API_URL}/oauth2/${path}`)
+
 	return (
-		<div className='space-y-2 flex flex-col gap-2'>
+		<div className='space-y-4'>
 			<Button
-				className='w-full border-0 bg-neutral-800 hover:bg-neutral-700 text-white'
+				className='w-full border-0 bg-neutral-700 hover:bg-neutral-800 text-white'
 				size='lg'
-				disabled
+				onClick={() => handleOAuthRedirect('github')}
 			>
-				<Github className='size-5 mr-2' />
+				<FaGithub className='size-5 mr-2' />
 				Continue with GitHub
 			</Button>
 
 			<Button
-				className='w-full border-0 bg-blue-700 hover:bg-blue-600 text-white'
+				className='w-full border-0 bg-blue-600 hover:bg-blue-700 text-white'
 				size='lg'
-				disabled
+				onClick={() => handleOAuthRedirect('google')}
 			>
 				<FaGoogle className='size-5 mr-2' />
 				Continue with Google

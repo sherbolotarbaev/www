@@ -64,6 +64,11 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(redirectUrl)
 	}
 
+	if (!user && pathname === '/account') {
+		const redirectUrl = new URL('/sign-in?next=/account', url)
+		return NextResponse.redirect(redirectUrl)
+	}
+
 	response.headers.set('x-forwarded-for', xff)
 
 	return response

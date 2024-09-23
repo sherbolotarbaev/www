@@ -16,6 +16,7 @@ type SendOtpRequest = {
 
 type SendOtpResponse = {
 	email: string
+	ok: boolean
 }
 
 type LogoutRequest = void

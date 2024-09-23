@@ -12,7 +12,7 @@ import { socialMedia } from './lib/social-media'
 
 const Hero = () => {
 	return (
-		<Card className='container border-none shadow-none'>
+		<Card className='border-none shadow-none'>
 			<CardContent className='px-0'>
 				<motion.div
 					initial={{ scale: 0.5, opacity: 0 }}

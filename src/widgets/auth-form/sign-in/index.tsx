@@ -39,7 +39,7 @@ export const SignInForm = () => {
 						<EmailForm setStep={setStep} setEmail={setEmail} />
 					</>
 				) : (
-					<OtpForm email={email} />
+					<OtpForm email={email} setStep={setStep} />
 				)}
 				{/* <SignUpLink /> */}
 			</CardContent>

@@ -50,7 +50,7 @@ const cardVariants = {
 
 const WorkExperience = () => {
 	return (
-		<div className='container rounded-lg shadow-sm'>
+		<div>
 			<motion.h2
 				className='text-2xl font-bold mb-3'
 				initial={{ opacity: 0, y: -20 }}
