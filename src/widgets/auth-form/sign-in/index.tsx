@@ -2,17 +2,19 @@
 
 import { useState } from 'react'
 
+import Link from 'next/link'
 import {
 	Card,
 	CardContent,
 	CardDescription,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from 'ui/card'
 import { Separator } from 'ui/separator'
-import EmailForm from './ui/email-form'
-import OtpForm from './ui/otp-form'
-import SocialButtons from './ui/social-buttons'
+import EmailForm from '../ui/email-form'
+import OAuthButtons from '../ui/oauth-buttons'
+import OtpForm from '../ui/otp-form'
 
 export const SignInForm = () => {
 	const [step, setStep] = useState<'email' | 'otp'>('email')
@@ -21,7 +23,7 @@ export const SignInForm = () => {
 	return (
 		<Card className='w-full max-w-sm mx-auto border-none shadow-none'>
 			<CardHeader className='px-0'>
-				<CardTitle className='text-4xl font-bold text-center'>
+				<CardTitle className='text-3xl font-bold text-center'>
 					{step === 'email' ? 'Welcome back' : 'Verification'}
 				</CardTitle>
 				{step === 'otp' && (
@@ -34,15 +36,25 @@ export const SignInForm = () => {
 			<CardContent className='px-0'>
 				{step === 'email' ? (
 					<>
-						<SocialButtons />
+						<OAuthButtons />
 						<Separator className='my-6' />
 						<EmailForm setStep={setStep} setEmail={setEmail} />
 					</>
 				) : (
 					<OtpForm email={email} setStep={setStep} />
 				)}
-				{/* <SignUpLink /> */}
 			</CardContent>
+
+			{step === 'email' && (
+				<CardFooter className='px-0 justify-center'>
+					<p className='text-muted-foreground'>
+						Don't have an account?{' '}
+						<Link href='/sign-up' className='text-blue-500'>
+							Sign Up
+						</Link>
+					</p>
+				</CardFooter>
+			)}
 		</Card>
 	)
 }

@@ -38,8 +38,7 @@ const MessageForm = () => {
 									<Input
 										type='text'
 										className={cn(
-											form.formState.errors.message &&
-												'focus-visible:ring-destructive',
+											form.formState.errors.message && 'border-error',
 											isAddingMessage && 'text-transparent'
 										)}
 										placeholder='Your message...'

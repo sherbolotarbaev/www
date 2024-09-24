@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
 
-import { SignInForm } from 'widgets/auth-form'
+import { SignUpForm } from 'widgets/auth-form'
 
 export const metadata: Metadata = {
-	title: 'Sign in',
+	title: 'Sign Up',
 }
 
-export default function SignIn() {
+export default function SignUp() {
 	return (
 		<div className='px-5 min-h-screen flex items-center justify-center'>
-			<SignInForm />
+			<SignUpForm />
 		</div>
 	)
 }

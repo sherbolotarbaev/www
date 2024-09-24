@@ -74,6 +74,7 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 	}, [entry.reactions, me?.id])
 
 	const handleEdit = () => {
+		if (!editedMessage.length) return
 		onEdit(entry.id, editedMessage)
 		setIsEditing(false)
 	}
