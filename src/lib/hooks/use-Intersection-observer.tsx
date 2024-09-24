@@ -8,10 +8,10 @@ interface IntersectionObserverOptions {
 	rootMargin?: string
 }
 
-export const useIntersectionObserver = <T extends Element>(
+function useIntersectionObserver<T extends Element>(
 	options: IntersectionObserverOptions = {},
 	freezeOnceVisible = false
-): [RefObject<T>, boolean] => {
+): [RefObject<T>, boolean] {
 	const [isVisible, setIsVisible] = useState(false)
 	const elementRef = useRef<T>(null)
 
@@ -45,3 +45,5 @@ export const useIntersectionObserver = <T extends Element>(
 
 	return [elementRef, isVisible]
 }
+
+export { useIntersectionObserver }

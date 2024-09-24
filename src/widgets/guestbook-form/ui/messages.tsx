@@ -30,6 +30,7 @@ import { Separator } from 'ui/separator'
 import { Skeleton } from 'ui/skeleton'
 
 import { MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react'
+import { MdVerified } from 'react-icons/md'
 
 import { cn } from 'utils'
 
@@ -98,7 +99,9 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 						</Avatar>
 
 						<div>
-							<p className='text-sm font-semibold'>{entry.author.name}</p>
+							<p className='text-sm font-semibold flex items-center gap-1'>
+								{entry.author.name} {entry.author.isVerified && <MdVerified />}
+							</p>
 							<p className='text-xs text-muted-foreground'>
 								{formatDistanceToNow(new Date(entry.createdAt), {
 									addSuffix: true,
@@ -344,7 +347,7 @@ const Messages: React.FC = () => {
 	return (
 		<div className='mt-6 space-y-4'>
 			<p className='text-md text-muted-foreground'>
-				Total messages: {totalMessages.toLocaleString()}
+				Total messages: {totalMessages.toLocaleString()}.
 			</p>
 			<AnimatePresence>
 				{messages.map(entry => (

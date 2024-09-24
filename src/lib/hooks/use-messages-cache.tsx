@@ -27,10 +27,12 @@ function useMessageCache() {
 	const [addMessage, { isLoading: isAddingMessage }] = useNewMessageMutation()
 
 	const [messages, setMessages] = useState<GuestbookMessage[]>([])
+	const [totalMessages, setTotalMessages] = useState(0)
 
 	useEffect(() => {
 		if (messagesData) {
 			setMessages(messagesData.items)
+			setTotalMessages(messagesData.totalCount)
 		}
 	}, [messagesData])
 
@@ -126,6 +128,7 @@ function useMessageCache() {
 			)
 
 			setMessages(updatedMessages)
+			setTotalMessages(prevCount => prevCount - 1)
 
 			if (isDeletingMessage) return
 
@@ -138,6 +141,7 @@ function useMessageCache() {
 			} catch (error: any) {
 				console.error('Failed to delete message:', error)
 				setMessages(messages)
+				setTotalMessages(messages.length)
 				handleError(error, 'Error deleting message')
 			}
 		},
@@ -165,6 +169,7 @@ function useMessageCache() {
 			}
 
 			setMessages(prevMessages => [newMessageData, ...prevMessages])
+			setTotalMessages(prevCount => prevCount + 1)
 
 			try {
 				const result = await addMessage({ body }).unwrap()
@@ -184,6 +189,7 @@ function useMessageCache() {
 				setMessages(prevMessages =>
 					prevMessages.filter(message => message.id !== tempId)
 				)
+				setTotalMessages(prevCount => prevCount - 1)
 				handleError(error, 'Error adding new message')
 			}
 		},
@@ -192,7 +198,7 @@ function useMessageCache() {
 
 	return {
 		messages,
-		totalMessages: messagesData?.totalCount || 0,
+		totalMessages,
 		isLoading,
 		isFetching,
 		updateReaction,

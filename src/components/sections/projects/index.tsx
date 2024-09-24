@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { motion } from 'framer-motion'
-import { useIntersectionObserver } from 'shared/hooks/use-Intersection-observer'
+import { useIntersectionObserver } from 'hooks/use-Intersection-observer'
 
 import Image from 'next/image'
 import Link from 'next/link'

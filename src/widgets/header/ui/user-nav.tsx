@@ -17,6 +17,8 @@ import {
 	DropdownMenuTrigger,
 } from 'ui/dropdown-menu'
 
+import { MdVerified } from 'react-icons/md'
+
 import { cn } from 'utils'
 
 interface UserNavProps {
@@ -61,8 +63,8 @@ const UserNav: React.FC<UserNavProps> = ({ me }) => {
 			>
 				<DropdownMenuLabel className='font-normal p-3'>
 					<div className='space-y-1'>
-						<p className='text-sm font-medium leading-none'>
-							{me.name} {me.surname}
+						<p className='text-sm font-medium leading-none flex items-center gap-1'>
+							{me.name} {me.surname} {me.isVerified && <MdVerified />}
 						</p>
 						<p className='text-xs leading-none text-muted-foreground'>
 							{me.email}
@@ -160,7 +162,7 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 	return (
 		<div className='mt-5'>
 			<div className='flex items-center justify-between'>
-				<div className='flex items-center space-x-4'>
+				<div className='flex items-center gap-3'>
 					<Avatar className='size-10'>
 						<AvatarImage src={me.photo} alt={`${me.name} ${me.surname}`} />
 						<AvatarFallback>
@@ -170,13 +172,23 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 					</Avatar>
 
 					<div>
-						<p className='text-sm font-medium'>{`${me.name} ${me.surname}`}</p>
+						<p className='text-sm font-medium flex items-center gap-1'>
+							{me.name}
+							{me.surname}
+							{me.isVerified && <MdVerified />}
+						</p>
 						<p className='text-xs text-muted-foreground'>{me.email}</p>
 					</div>
 				</div>
 
-				<Button variant='ghost' disabled={isLoggingOut} onClick={handleLogout}>
-					<LogOut className='size-4' />
+				<Button
+					variant='ghost'
+					size='icon'
+					className='ml-2'
+					disabled={isLoggingOut}
+					onClick={handleLogout}
+				>
+					<LogOut className='size-3.5' />
 				</Button>
 			</div>
 		</div>
