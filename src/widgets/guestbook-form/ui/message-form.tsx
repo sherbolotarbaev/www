@@ -7,6 +7,7 @@ import * as z from 'zod'
 
 import { Form, FormControl, FormField, FormItem, FormMessage } from 'ui/form'
 import { Input } from 'ui/input'
+import { Skeleton } from 'ui/skeleton'
 
 import { cn } from 'utils'
 import { MessageFormSchema } from '../lib/schema'
@@ -33,16 +34,22 @@ const MessageForm = () => {
 					render={({ field }) => (
 						<FormItem>
 							<FormControl>
-								<Input
-									type='text'
-									className={cn(
-										form.formState.errors.message && 'focus-visible:ring-error',
-										'h-11 py-5 text-md rounded-lg'
+								<div className='relative'>
+									<Input
+										type='text'
+										className={cn(
+											form.formState.errors.message &&
+												'focus-visible:ring-destructive',
+											isAddingMessage && 'text-transparent'
+										)}
+										placeholder='Your message...'
+										disabled={isAddingMessage}
+										{...field}
+									/>
+									{isAddingMessage && (
+										<Skeleton className='absolute inset-0 bg-muted/50 rounded-lg' />
 									)}
-									placeholder='Your message...'
-									disabled={isAddingMessage}
-									{...field}
-								/>
+								</div>
 							</FormControl>
 
 							<FormMessage className='text-error' />

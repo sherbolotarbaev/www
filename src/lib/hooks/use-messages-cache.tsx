@@ -9,10 +9,11 @@ import {
 	useRemoveMessageReactionMutation,
 } from 'api/guestbook'
 import { useGetMeQuery } from 'api/me'
+import { toast } from 'hooks/use-toast'
 import { useCallback, useEffect, useState } from 'react'
 
 function useMessageCache() {
-	const { data: messagesData, isLoading } = useGetMessagesQuery()
+	const { data: messagesData, isLoading, isFetching } = useGetMessagesQuery()
 	const { data: me } = useGetMeQuery()
 
 	const [addReaction, { isLoading: isAddingReaction }] =
@@ -33,6 +34,18 @@ function useMessageCache() {
 		}
 	}, [messagesData])
 
+	const handleError = (error: any, title: string) => {
+		const description: string =
+			error.data?.message ||
+			(error.status === 'FETCH_ERROR' && 'Network error.') ||
+			'An unexpected error occurred.'
+		return toast({
+			title,
+			description,
+			variant: 'destructive',
+		})
+	}
+
 	const updateReaction = useCallback(
 		async (messageId: number, emoji: string, isAdding: boolean) => {
 			const updatedMessages = messages.map(message => {
@@ -52,13 +65,23 @@ function useMessageCache() {
 			try {
 				if (isAdding && !isAddingReaction) {
 					await addReaction({ id: messageId, emoji }).unwrap()
+					toast({
+						title: `Added reaction`,
+						description:
+							'Your reaction have been successfully added to this message.',
+					})
 				} else if (!isAdding && !isRemovingReaction) {
 					await removeReaction({ id: messageId, emoji }).unwrap()
+					toast({
+						title: `Removed reaction`,
+						description:
+							'Your reaction have been successfully removed from this message.',
+					})
 				}
-			} catch (error) {
+			} catch (error: any) {
 				console.error('Failed to update reaction:', error)
 				setMessages(messages)
-				// TODO: Show an error toast notification
+				handleError(error, 'Error updating reaction')
 			}
 		},
 		[
@@ -83,10 +106,14 @@ function useMessageCache() {
 
 			try {
 				await editMessage({ id: messageId, body: newBody }).unwrap()
-			} catch (error) {
+				toast({
+					title: 'Updated message',
+					description: 'Your message have been successfully updated.',
+				})
+			} catch (error: any) {
 				console.error('Failed to edit message:', error)
 				setMessages(messages)
-				// TODO: Show an error toast notification
+				handleError(error, 'Error updating message')
 			}
 		},
 		[messages, editMessage, isEditingMessage]
@@ -104,10 +131,14 @@ function useMessageCache() {
 
 			try {
 				await deleteMessage({ id: messageId }).unwrap()
-			} catch (error) {
+				toast({
+					title: 'Deleted message',
+					description: 'Your message have been successfully deleted.',
+				})
+			} catch (error: any) {
 				console.error('Failed to delete message:', error)
 				setMessages(messages)
-				// TODO: Show an error toast notification
+				handleError(error, 'Error deleting message')
 			}
 		},
 		[messages, deleteMessage, isDeletingMessage]
@@ -144,12 +175,16 @@ function useMessageCache() {
 							: message
 					)
 				)
-			} catch (error) {
+				toast({
+					title: 'New message',
+					description: 'Your new message have been successfully added.',
+				})
+			} catch (error: any) {
 				console.error('Failed to add new message:', error)
 				setMessages(prevMessages =>
 					prevMessages.filter(message => message.id !== tempId)
 				)
-				// TODO: Show an error toast notification
+				handleError(error, 'Error adding new message')
 			}
 		},
 		[addMessage, isAddingMessage, me]
@@ -157,7 +192,9 @@ function useMessageCache() {
 
 	return {
 		messages,
+		totalMessages: messagesData?.totalCount || 0,
 		isLoading,
+		isFetching,
 		updateReaction,
 		editMessageContent,
 		removeMessage,

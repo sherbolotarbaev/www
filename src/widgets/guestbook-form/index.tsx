@@ -30,8 +30,8 @@ const GuestbookForm: React.FC<GuestbookFormProps> = ({ me }) => {
 						</p>
 
 						<Link href='/sign-in?next=/guestbook' passHref>
-							<Button className='px-7' variant='outline'>
-								<UserIcon className='mr-2 size-4' />
+							<Button variant='outline'>
+								<UserIcon className='mr-2 size-3.5' />
 								Sign in
 							</Button>
 						</Link>

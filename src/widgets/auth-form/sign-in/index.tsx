@@ -22,7 +22,7 @@ export const SignInForm = () => {
 		<Card className='w-full max-w-sm mx-auto border-none shadow-none'>
 			<CardHeader className='px-0'>
 				<CardTitle className='text-4xl font-bold text-center'>
-					{step === 'email' ? 'Sign in to sherbolotarbaev.co' : 'Verification'}
+					{step === 'email' ? 'Welcome back' : 'Verification'}
 				</CardTitle>
 				{step === 'otp' && (
 					<CardDescription className='text-center text-primary'>
@@ -31,7 +31,7 @@ export const SignInForm = () => {
 				)}
 			</CardHeader>
 
-			<CardContent>
+			<CardContent className='px-0'>
 				{step === 'email' ? (
 					<>
 						<SocialButtons />

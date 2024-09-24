@@ -13,7 +13,6 @@ import { Input } from 'ui/input'
 
 import { CircleAlert, Mail } from 'lucide-react'
 
-import { cn } from 'utils'
 import { EmailFormSchema } from '../lib/schema'
 
 interface EmailFormProps {
@@ -52,10 +51,9 @@ const EmailForm: React.FC<EmailFormProps> = ({ setStep, setEmail }) => {
 							<FormControl onChange={() => setError('')}>
 								<Input
 									type='email'
-									className={cn(
-										form.formState.errors.email && 'focus-visible:ring-error',
-										'h-11 py-5 text-md rounded-lg'
-									)}
+									className={
+										form.formState.errors.email && 'focus-visible:ring-error'
+									}
 									placeholder='Email Address'
 									disabled={isLoading || isSuccess}
 									autoComplete='email'

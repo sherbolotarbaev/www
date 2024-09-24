@@ -108,24 +108,10 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 					</div>
 
 					{actionsOn && (
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant='ghost' size='icon' className='h-8 w-8'>
-									<MoreHorizontal className='h-4 w-4' />
-									<span className='sr-only'>Open menu</span>
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align='end'>
-								<DropdownMenuItem onClick={() => setIsEditing(true)}>
-									<Pencil className='mr-2 h-4 w-4' />
-									Edit
-								</DropdownMenuItem>
-								<DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
-									<Trash2 className='mr-2 h-4 w-4' />
-									Delete
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+						<ActionDropdown
+							setIsEditing={setIsEditing}
+							setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+						/>
 					)}
 				</CardHeader>
 
@@ -137,6 +123,7 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 								onChange={e => setEditedMessage(e.target.value)}
 								className='w-full'
 							/>
+
 							<div className='flex justify-end space-x-2'>
 								<Button size='sm' onClick={handleEdit}>
 									Save
@@ -157,9 +144,9 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 
 				<Separator />
 
-				<CardFooter className='p-4 flex justify-between items-center'>
+				<CardFooter className='p-4 flex justify-between items-start gap-1'>
 					{reactionCounts.size > 0 ? (
-						<div className='flex space-x-1'>
+						<div className='flex items-center gap-1 flex-wrap'>
 							{Array.from(reactionCounts.entries()).map(([emoji, count]) => (
 								<Button
 									key={emoji}
@@ -167,7 +154,8 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 									size='sm'
 									className={cn(
 										'flex items-center rounded-xl space-x-1',
-										userReactions.has(emoji) && 'bg-secondary',
+										userReactions.has(emoji) &&
+											'bg-secondary hover:bg-secondary',
 										!me && 'cursor-default hover:bg-transparent'
 									)}
 									onClick={() => {
@@ -220,44 +208,123 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 					</Popover>
 				</CardFooter>
 
-				<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-					<DialogContent className='p-4'>
-						<DialogHeader>
-							<DialogTitle>
-								Are you sure you want to delete this message?
-							</DialogTitle>
-							<DialogDescription>
-								This action cannot be undone.
-							</DialogDescription>
-						</DialogHeader>
-
-						<DialogFooter className='gap-2'>
-							<Button
-								variant='outline'
-								onClick={() => setIsDeleteDialogOpen(false)}
-							>
-								Cancel
-							</Button>
-							<Button
-								variant='destructive'
-								onClick={() => {
-									onDelete(entry.id)
-									setIsDeleteDialogOpen(false)
-								}}
-							>
-								Delete
-							</Button>
-						</DialogFooter>
-					</DialogContent>
-				</Dialog>
+				<DeleteMessageDialog
+					isDeleteDialogOpen={isDeleteDialogOpen}
+					setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+					onDelete={onDelete}
+					entryId={entry.id}
+				/>
 			</Card>
 		</motion.div>
 	)
 }
 
+interface ActionDropdownProps {
+	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
+	setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const ActionDropdown: React.FC<ActionDropdownProps> = ({
+	setIsEditing,
+	setIsDeleteDialogOpen,
+}) => {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant='ghost' size='icon' className='h-8 w-8'>
+					<MoreHorizontal className='h-4 w-4' />
+					<span className='sr-only'>Open menu</span>
+				</Button>
+			</DropdownMenuTrigger>
+
+			<DropdownMenuContent align='end'>
+				<DropdownMenuItem onClick={() => setIsEditing(true)}>
+					<Pencil className='mr-2 h-4 w-4' />
+					Edit
+				</DropdownMenuItem>
+
+				<DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
+					<Trash2 className='mr-2 h-4 w-4' />
+					Delete
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	)
+}
+
+interface DeleteMessageDialogProps {
+	isDeleteDialogOpen: boolean
+	setIsDeleteDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+	onDelete: (messageId: number) => void
+	entryId: number
+}
+
+const DeleteMessageDialog: React.FC<DeleteMessageDialogProps> = ({
+	isDeleteDialogOpen,
+	setIsDeleteDialogOpen,
+	onDelete,
+	entryId,
+}) => {
+	return (
+		<Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+			<DialogContent className='p-4'>
+				<DialogHeader>
+					<DialogTitle>
+						Are you sure you want to delete this message?
+					</DialogTitle>
+					<DialogDescription>This action cannot be undone.</DialogDescription>
+				</DialogHeader>
+
+				<DialogFooter className='gap-2'>
+					<Button
+						variant='outline'
+						onClick={() => setIsDeleteDialogOpen(false)}
+					>
+						Cancel
+					</Button>
+					<Button
+						variant='destructive'
+						onClick={() => {
+							onDelete(entryId)
+							setIsDeleteDialogOpen(false)
+						}}
+					>
+						Delete
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	)
+}
+
+const MessageSkeleton = () => (
+	<Card className='mb-6 overflow-hidden shadow-sm'>
+		<CardHeader className='flex flex-row items-center space-y-0 p-4'>
+			<Skeleton className='size-9 rounded-md' />
+
+			<div className='space-y-2 ml-4'>
+				<Skeleton className='h-4 w-[150px]' />
+				<Skeleton className='h-3 w-[100px]' />
+			</div>
+		</CardHeader>
+
+		<CardContent className='p-4'>
+			<Skeleton className='h-4 w-full mb-2' />
+			<Skeleton className='h-4 w-2/3' />
+		</CardContent>
+
+		<Separator />
+
+		<CardFooter className='p-4'>
+			<Skeleton className='h-[1.9rem] w-full rounded-xl' />
+		</CardFooter>
+	</Card>
+)
+
 const Messages: React.FC = () => {
 	const {
 		messages,
+		totalMessages,
 		isLoading,
 		updateReaction,
 		editMessageContent,
@@ -268,34 +335,17 @@ const Messages: React.FC = () => {
 		return (
 			<div className='mt-6'>
 				{Array.from({ length: 5 }).map((_, index) => (
-					<Card key={index} className='mb-6 overflow-hidden shadow-sm'>
-						<CardHeader className='flex flex-row items-center space-y-0 p-4'>
-							<Skeleton className='size-9 rounded-md' />
-
-							<div className='space-y-2 ml-4'>
-								<Skeleton className='h-4 w-[150px]' />
-								<Skeleton className='h-3 w-[100px]' />
-							</div>
-						</CardHeader>
-
-						<CardContent className='p-4'>
-							<Skeleton className='h-4 w-full mb-2' />
-							<Skeleton className='h-4 w-2/3' />
-						</CardContent>
-
-						<Separator />
-
-						<CardFooter className='p-4'>
-							<Skeleton className='h-[1.9rem] w-full rounded-xl' />
-						</CardFooter>
-					</Card>
+					<MessageSkeleton key={index} />
 				))}
 			</div>
 		)
 	}
 
 	return (
-		<div className='mt-6'>
+		<div className='mt-6 space-y-4'>
+			<p className='text-md text-muted-foreground'>
+				Total messages: {totalMessages.toLocaleString()}
+			</p>
 			<AnimatePresence>
 				{messages.map(entry => (
 					<MessageEntry

@@ -11,7 +11,7 @@ export default async function Guestbook() {
 	const me = await getMe()
 
 	return (
-		<div className='container'>
+		<div className='container min-h-[42.5rem]'>
 			<GuestbookForm me={me} />
 		</div>
 	)
