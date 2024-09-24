@@ -12,8 +12,10 @@ import {
 
 import { Moon, Sun } from 'lucide-react'
 
+import { cn } from 'utils'
+
 const ModeToggle = () => {
-	const { setTheme } = useTheme()
+	const { theme, setTheme } = useTheme()
 
 	return (
 		<DropdownMenu>
@@ -26,15 +28,24 @@ const ModeToggle = () => {
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent align='start'>
-				<DropdownMenuItem onClick={() => setTheme('light')}>
+				<DropdownMenuItem
+					onClick={() => setTheme('light')}
+					className={cn(theme === 'light' && 'text-primary')}
+				>
 					Light
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onClick={() => setTheme('dark')}>
+				<DropdownMenuItem
+					onClick={() => setTheme('dark')}
+					className={cn(theme === 'dark' && 'text-primary')}
+				>
 					Dark
 				</DropdownMenuItem>
 
-				<DropdownMenuItem onClick={() => setTheme('system')}>
+				<DropdownMenuItem
+					onClick={() => setTheme('system')}
+					className={cn(theme === 'system' && 'text-primary')}
+				>
 					System
 				</DropdownMenuItem>
 			</DropdownMenuContent>

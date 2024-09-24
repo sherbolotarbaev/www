@@ -3,6 +3,7 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { siteConfig } from '~/config/site'
 
+import TopLoadingBar from 'nextjs-toploader'
 import Providers from 'providers'
 import { Toaster } from 'ui/toaster'
 import { cn } from 'utils'
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
 						geistMono.variable
 					)}
 				>
+					<TopLoadingBar color='#418af4' showSpinner={false} height={3} />
 					<Providers>{children}</Providers>
 					<Toaster />
 				</body>

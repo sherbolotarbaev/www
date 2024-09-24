@@ -111,9 +111,9 @@ export default function AccountClient({ me }: Readonly<AccountClientProps>) {
 						<div>
 							<Label
 								htmlFor='avatar-upload'
-								className={
+								className={cn(
 									isUploading ? 'cursor-not-allowed' : 'cursor-pointer'
-								}
+								)}
 							>
 								<div
 									className={cn(
