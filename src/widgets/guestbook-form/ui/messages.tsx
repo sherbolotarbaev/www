@@ -104,9 +104,13 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 								{entry.author.name} {entry.author.isVerified && <MdVerified />}
 							</p>
 							<p className='text-xs text-muted-foreground'>
-								{formatDistanceToNow(new Date(entry.createdAt), {
-									addSuffix: true,
-								})}
+								{entry.isEdited
+									? `edited ${formatDistanceToNow(new Date(entry.updatedAt), {
+											addSuffix: true,
+									  })}`
+									: formatDistanceToNow(new Date(entry.createdAt), {
+											addSuffix: true,
+									  })}
 							</p>
 						</div>
 					</div>
