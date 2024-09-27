@@ -26,7 +26,6 @@ interface UserNavProps {
 }
 
 const UserNav: React.FC<UserNavProps> = ({ me }) => {
-	const { setTheme, theme } = useTheme()
 	const [logOut, { isLoading: isLoggingOut }] = useLogoutMutation()
 
 	const handleLogout = async () => {
@@ -163,7 +162,7 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 		<div className='mt-5'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-3'>
-					<Avatar className='size-10'>
+					<Avatar className='size-10 rounded-md'>
 						<AvatarImage src={me.photo} alt={`${me.name} ${me.surname}`} />
 						<AvatarFallback>
 							{me.name[0]}
