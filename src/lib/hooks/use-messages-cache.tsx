@@ -16,10 +16,8 @@ function useMessageCache() {
 	const { data: messagesData, isLoading, isFetching } = useGetMessagesQuery()
 	const { data: me } = useGetMeQuery()
 
-	const [addReaction, { isLoading: isAddingReaction }] =
-		useAddMessageReactionMutation()
-	const [removeReaction, { isLoading: isRemovingReaction }] =
-		useRemoveMessageReactionMutation()
+	const [addReaction] = useAddMessageReactionMutation()
+	const [removeReaction] = useRemoveMessageReactionMutation()
 	const [editMessage, { isLoading: isEditingMessage }] =
 		useEditMessageMutation()
 	const [deleteMessage, { isLoading: isDeletingMessage }] =
@@ -65,14 +63,14 @@ function useMessageCache() {
 			setMessages(updatedMessages)
 
 			try {
-				if (isAdding && !isAddingReaction) {
+				if (isAdding) {
 					await addReaction({ id: messageId, emoji }).unwrap()
 					toast({
 						title: `Added reaction`,
 						description:
 							'Your reaction have been successfully added to this message.',
 					})
-				} else if (!isAdding && !isRemovingReaction) {
+				} else {
 					await removeReaction({ id: messageId, emoji }).unwrap()
 					toast({
 						title: `Removed reaction`,
@@ -86,14 +84,7 @@ function useMessageCache() {
 				handleError(error, 'Error updating reaction')
 			}
 		},
-		[
-			messages,
-			me,
-			addReaction,
-			removeReaction,
-			isAddingReaction,
-			isRemovingReaction,
-		]
+		[messages, me, addReaction, removeReaction]
 	)
 
 	const editMessageContent = useCallback(
