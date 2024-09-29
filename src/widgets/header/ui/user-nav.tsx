@@ -73,8 +73,10 @@ const UserNav: React.FC<UserNavProps> = ({ me }) => {
 
 				<DropdownMenuSeparator />
 
-				<Link href='/account'>
-					<DropdownMenuItem>Account</DropdownMenuItem>
+				<Link href='/account' passHref>
+					<DropdownMenuItem>
+						<span>Account</span>
+					</DropdownMenuItem>
 				</Link>
 
 				<DropdownMenuItem className='cursor-default focus:bg-transparent focus:text-muted-foreground'>
@@ -159,7 +161,7 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 	}
 
 	return (
-		<div className='mt-5'>
+		<Link href='/account' className='mt-5'>
 			<div className='flex items-center justify-between'>
 				<div className='flex items-center gap-3'>
 					<Avatar className='size-10 rounded-md'>
@@ -190,7 +192,7 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 					<LogOut className='size-3.5' />
 				</Button>
 			</div>
-		</div>
+		</Link>
 	)
 }
 
