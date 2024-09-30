@@ -68,19 +68,19 @@ export default function BlogPostClient({
 			/>
 
 			<article className='max-w-3xl'>
-				<header className='mb-8'>
-					<h1 className='text-2xl font-bold mb-4'>{title}</h1>
+				<header className='mb-8 flex flex-col gap-4'>
+					<h1 className='text-2xl font-bold'>{title}</h1>
 
-					<div className='flex items-center gap-2 text-sm text-muted-foreground mb-4'>
+					<div className='flex items-center gap-2 text-sm text-muted-foreground'>
 						<span className='flex items-center'>
-							<CalendarIcon className='w-4 h-4 mr-1' />
+							<CalendarIcon className='size-4 mr-1' />
 							{formattedDate} ({distance})
 						</span>
 
 						<span className='text-muted-foreground'>•</span>
 
 						<span className='flex items-center'>
-							<ClockIcon className='w-4 h-4 mr-1' />
+							<ClockIcon className='size-4 mr-1' />
 							{readingTime} min read
 						</span>
 					</div>
@@ -97,6 +97,8 @@ export default function BlogPostClient({
 							blurDataURL={image.blurData}
 						/>
 					)}
+
+					<p>{summary}</p>
 				</header>
 
 				<div className='prose lg:prose-xl'>
