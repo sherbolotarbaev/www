@@ -8,7 +8,23 @@ export type Project = {
 
 export const projects: Project[] = [
 	{
-		title: 'Personal API ✨',
+		title: 'ChinaTradeX',
+		description:
+			'Your gateway to seamless trade between China and the world. Track orders, manage shipments, and optimize your international business with real-time updates and comprehensive logistics solutions.',
+		tags: [
+			'Next.js',
+			'Nest.js',
+			'Fastify',
+			'TypeScript',
+			'Prisma',
+			'PostgreSQL',
+			'Redis',
+		],
+		image: '/images/chinatradex.png',
+		url: 'https://chinatradex.sherbolotarbaev.co',
+	},
+	{
+		title: 'Personal API',
 		description:
 			'A robust and scalable Personal API leveraging NestJS and TypeScript, built to manage user authentication, sessions, and data storage with Prisma and PostgreSQL. Integrated OAuth2 with Passport.js for secure authentication, and Supabase for additional features like real-time updates and storage.',
 		tags: [

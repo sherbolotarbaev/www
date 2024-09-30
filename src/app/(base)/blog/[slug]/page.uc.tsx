@@ -59,7 +59,7 @@ export default function BlogPostClient({
 	}
 
 	return (
-		<div className='container mx-auto px-4 py-8'>
+		<div className='container'>
 			<Script
 				id='blog-post-schema'
 				type='application/ld+json'
@@ -67,7 +67,7 @@ export default function BlogPostClient({
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 			/>
 
-			<article className='max-w-3xl mx-auto'>
+			<article className='max-w-3xl'>
 				<header className='mb-8'>
 					<h1 className='text-2xl font-bold mb-4'>{title}</h1>
 

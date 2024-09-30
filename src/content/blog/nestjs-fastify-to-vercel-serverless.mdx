@@ -1,0 +1,150 @@
+---
+title: 'Converting a NestJS Fastify App to Vercel Serverless'
+publishedAt: '2024-09-30'
+author: 'Sher Arbaev'
+summary: 'Learn how to transform your NestJS Fastify application into a serverless function deployable on Vercel. This guide walks you through the process step-by-step, ensuring a smooth transition to a scalable, serverless architecture.'
+---
+
+In the world of modern web development, serverless architectures are gaining popularity due to their scalability and cost-effectiveness. This guide will show you how to convert your NestJS Fastify application into a serverless function that can be deployed on Vercel.
+
+## Prerequisites
+
+Before we begin, make sure you have:
+
+1. An existing NestJS project using Fastify
+2. Node.js and npm installed
+3. Vercel CLI installed (`npm i -g vercel`)
+
+## Step 1: Install Required Dependencies
+
+First, let's install the necessary packages:
+
+```bash
+npm install @vendia/serverless-express
+```
+
+## Step 2: Modify Your Main Application File
+
+Update your `src/main.ts` file to use Fastify and prepare for serverless:
+
+```typescript
+import { NestFactory } from '@nestjs/core'
+import {
+	FastifyAdapter,
+	NestFastifyApplication,
+} from '@nestjs/platform-fastify'
+import { AppModule } from './app.module'
+
+let app: NestFastifyApplication
+
+async function bootstrap() {
+	if (!app) {
+		app = await NestFactory.create<NestFastifyApplication>(
+			AppModule,
+			new FastifyAdapter()
+		)
+		await app.init()
+	}
+	return app.getHttpAdapter().getInstance()
+}
+
+export default bootstrap
+```
+
+## Step 3: Create a Serverless Function File
+
+Create a new file `api/index.ts` in your project root:
+
+```typescript
+import { Callback, Context, Handler } from 'aws-lambda'
+import serverlessExpress from '@vendia/serverless-express'
+import bootstrap from '../src/main'
+
+let server: Handler
+
+async function setup(event: any, context: Context) {
+	const app = await bootstrap()
+	server = serverlessExpress({ app })
+	return server(event, context)
+}
+
+export const handler: Handler = async (
+	event: any,
+	context: Context,
+	callback: Callback
+) => {
+	if (server) {
+		return server(event, context, callback)
+	}
+	return setup(event, context)
+}
+```
+
+## Step 4: Update package.json
+
+Update your `package.json` to include build scripts:
+
+```json
+{
+	"scripts": {
+		"build": "nest build",
+		"vercel-build": "npm run build"
+	}
+}
+```
+
+## Step 5: Create a Vercel Configuration File
+
+Create a `vercel.json` file in your project root:
+
+```json
+{
+	"version": 2,
+	"builds": [
+		{
+			"src": "api/index.ts",
+			"use": "@vercel/node"
+		}
+	],
+	"routes": [
+		{
+			"src": "/(.*)",
+			"dest": "api/index.ts"
+		}
+	]
+}
+```
+
+## Step 6: Deploy to Vercel
+
+Now you're ready to deploy your NestJS Fastify app as a serverless function on Vercel. Use the Vercel CLI to deploy:
+
+```bash
+vercel
+```
+
+## Considerations and Limitations
+
+When converting your NestJS Fastify app to a serverless function, keep in mind:
+
+1. **Cold Starts**: Serverless functions may experience "cold starts," which can lead to longer response times for the first request after a period of inactivity.
+
+2. **Statelessness**: Serverless functions are stateless, so you need to use external services for persistent storage.
+
+3. **Execution Time Limits**: Vercel has execution time limits for serverless functions. Ensure your functions complete within these limits.
+
+4. **Dependencies**: Be mindful of the size of your dependencies, as there are often limits on the total package size for serverless functions.
+
+## Testing Locally
+
+To test your serverless NestJS Fastify app locally, you can use the Vercel CLI:
+
+```bash
+vercel dev
+```
+
+This will start a local development server that simulates the Vercel serverless environment.
+
+By following these steps, you've successfully converted your NestJS Fastify application into a serverless function deployable on Vercel. This approach allows you to leverage the benefits of serverless architecture while maintaining the structure and features of your NestJS application.
+
+Remember to adjust your application logic if it relies on long-running processes or in-memory state, as these patterns may not be suitable for a serverless environment. Instead, consider using external services for tasks that require persistence or long-running operations.

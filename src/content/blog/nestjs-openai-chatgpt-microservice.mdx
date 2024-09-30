@@ -1,6 +1,5 @@
 ---
 title: 'Building a Nest.js Microservice for OpenAI and ChatGPT Integration'
-private: 'false'
 publishedAt: '2023-11-30'
 image: '/images/nestjs-openai-chatgpt-microservice.webp'
 author: 'Sher Arbaev'
@@ -28,36 +27,36 @@ src
 The `main.ts` includes an async function, which will start our application:
 
 ```typescript
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
-import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
+import { ValidationPipe } from '@nestjs/common'
+import * as cookieParser from 'cookie-parser'
+import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 
 async function start() {
-  // Create an instance of the Nest application using the AppModule.
-  const app = await NestFactory.create(AppModule, { cors: true });
-  const port = process.env.PORT || 3000;
+	// Create an instance of the Nest application using the AppModule.
+	const app = await NestFactory.create(AppModule, { cors: true })
+	const port = process.env.PORT || 3000
 
-  const corsOptions: CorsOptions = {
-    origin: 'http://localhost:3000', // Specify the front-end URL
-    credentials: true, // Enable reading cookies from the request
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    maxAge: 24 * 60 * 60 * 5, // Set the maximum age of preflight requests to 5 days
-  };
+	const corsOptions: CorsOptions = {
+		origin: 'http://localhost:3000', // Specify the front-end URL
+		credentials: true, // Enable reading cookies from the request
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+		maxAge: 24 * 60 * 60 * 5, // Set the maximum age of preflight requests to 5 days
+	}
 
-  // Enable CORS with the specified options.
-  app.enableCors(corsOptions);
-  // Use global validation pipes for input validation.
-  app.useGlobalPipes(new ValidationPipe());
-  // Use the cookie-parser middleware to parse cookies from incoming requests.
-  app.use(cookieParser());
+	// Enable CORS with the specified options.
+	app.enableCors(corsOptions)
+	// Use global validation pipes for input validation.
+	app.useGlobalPipes(new ValidationPipe())
+	// Use the cookie-parser middleware to parse cookies from incoming requests.
+	app.use(cookieParser())
 
-  await app.listen(port, () =>
-    console.log(`📢 Server starting on: http://localhost:${port}/ ⚡️`),
-  );
+	await app.listen(port, () =>
+		console.log(`📢 Server starting on: http://localhost:${port}/ ⚡️`)
+	)
 }
-start();
+start()
 ```
 
 ### Integrating OpenAI:
@@ -72,210 +71,217 @@ nest g service openai --no-spec
 ```
 
 ```typescript
-import { Global, Module } from '@nestjs/common';
-import { OpenAIService } from './openai.service';
-import { SupabaseService } from '../supabase/supabase.service';
+import { Global, Module } from '@nestjs/common'
+import { OpenAIService } from './openai.service'
+import { SupabaseService } from '../supabase/supabase.service'
 
 @Global()
 @Module({
-  providers: [OpenAIService, SupabaseService],
-  exports: [OpenAIService],
+	providers: [OpenAIService, SupabaseService],
+	exports: [OpenAIService],
 })
 export class OpenAIModule {}
 ```
 
 ```typescript
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import OpenAIApi from 'openai';
-import { ChatCompletion, ChatCompletionMessageParam } from 'openai/resources';
-import { SupabaseService } from '../supabase/supabase.service';
-import { File } from '@web-std/file';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common'
+import OpenAIApi from 'openai'
+import { ChatCompletion, ChatCompletionMessageParam } from 'openai/resources'
+import { SupabaseService } from '../supabase/supabase.service'
+import { File } from '@web-std/file'
 
 // Define a type for message objects
 type Message = {
-  text: string;
-  ai?: boolean; // Indicate if the message is from the AI
-};
+	text: string
+	ai?: boolean // Indicate if the message is from the AI
+}
 
 @Injectable()
 export class ChatGptService {
-  public openai: OpenAIApi;
+	public openai: OpenAIApi
 
-  constructor(
-    private readonly supabaseService: SupabaseService,
-    private readonly openai: OpenAIApi,
-  ) {
-    // Inject the OpenAIApi instance
-    // Initialize OpenAIApi with the provided API key from the environment
-    this.openai = new OpenAIApi({
-      apiKey: process.env.OPEN_AI_SECRET_KEY,
-    });
-  }
+	constructor(
+		private readonly supabaseService: SupabaseService,
+		private readonly openai: OpenAIApi
+	) {
+		// Inject the OpenAIApi instance
+		// Initialize OpenAIApi with the provided API key from the environment
+		this.openai = new OpenAIApi({
+			apiKey: process.env.OPEN_AI_SECRET_KEY,
+		})
+	}
 
-  /**
-   * Make a request to ChatGPT to generate a response based on a prompt and message history.
-   * @param prompt - The prompt for the ChatGPT model
-   * @param messages - An array of messages representing the conversation history
-   * @returns A string containing the generated response
-   */
-  async chatGptRequest(prompt: string, messages: Message[]): Promise<string> {
-    try {
-      // Convert message history to the format expected by the OpenAI API
-      const history = messages.map(
-        (message): ChatCompletionMessageParam => ({
-          role: message.ai ? 'assistant' : 'user',
-          content: message.text,
-        }),
-      );
+	/**
+	 * Make a request to ChatGPT to generate a response based on a prompt and message history.
+	 * @param prompt - The prompt for the ChatGPT model
+	 * @param messages - An array of messages representing the conversation history
+	 * @returns A string containing the generated response
+	 */
+	async chatGptRequest(prompt: string, messages: Message[]): Promise<string> {
+		try {
+			// Convert message history to the format expected by the OpenAI API
+			const history = messages.map(
+				(message): ChatCompletionMessageParam => ({
+					role: message.ai ? 'assistant' : 'user',
+					content: message.text,
+				})
+			)
 
-      // Make a request to the ChatGPT model
-      const completion: ChatCompletion = await this.openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: prompt,
-          },
-          ...history,
-        ],
-        temperature: 0.5,
-        max_tokens: 1000,
-      });
+			// Make a request to the ChatGPT model
+			const completion: ChatCompletion =
+				await this.openai.chat.completions.create({
+					model: 'gpt-4',
+					messages: [
+						{
+							role: 'system',
+							content: prompt,
+						},
+						...history,
+					],
+					temperature: 0.5,
+					max_tokens: 1000,
+				})
 
-      // Extract the content from the response
-      const [content] = completion.choices.map((choice) => choice.message.content);
+			// Extract the content from the response
+			const [content] = completion.choices.map(choice => choice.message.content)
 
-      return content;
-    } catch (e) {
-      // Log and propagate the error
-      console.error(e);
-      throw new ServiceUnavailableException('Failed request to ChatGPT');
-    }
-  }
+			return content
+		} catch (e) {
+			// Log and propagate the error
+			console.error(e)
+			throw new ServiceUnavailableException('Failed request to ChatGPT')
+		}
+	}
 
-  /**
-   * Synthesize speech from text using the OpenAI text-to-speech model.
-   * @param userId - The user ID for identifying the audio file
-   * @param text - The text to be synthesized
-   * @returns A URL pointing to the synthesized audio file
-   */
-  async synthesizeSpeech(userId: number, text: string): Promise<string> {
-    try {
-      // Make a request to the text-to-speech model
-      const [ttsResponse, arrayBuffer] = await Promise.all([
-        this.openai.audio.speech.create({
-          input: text,
-          model: 'tts-1-hd',
-          voice: 'alloy',
-        }),
-        this.openai.audio.speech.arrayBuffer(),
-      ]);
+	/**
+	 * Synthesize speech from text using the OpenAI text-to-speech model.
+	 * @param userId - The user ID for identifying the audio file
+	 * @param text - The text to be synthesized
+	 * @returns A URL pointing to the synthesized audio file
+	 */
+	async synthesizeSpeech(userId: number, text: string): Promise<string> {
+		try {
+			// Make a request to the text-to-speech model
+			const [ttsResponse, arrayBuffer] = await Promise.all([
+				this.openai.audio.speech.create({
+					input: text,
+					model: 'tts-1-hd',
+					voice: 'alloy',
+				}),
+				this.openai.audio.speech.arrayBuffer(),
+			])
 
-      // Convert the audio data to a buffer
-      const audioBuffer = Buffer.from(arrayBuffer);
+			// Convert the audio data to a buffer
+			const audioBuffer = Buffer.from(arrayBuffer)
 
-      // Upload the audio file to a storage service (Supabase)
-      const filename = await this.supabaseService.uploadAudio(userId, audioBuffer);
+			// Upload the audio file to a storage service (Supabase)
+			const filename = await this.supabaseService.uploadAudio(
+				userId,
+				audioBuffer
+			)
 
-      // Get the URL for the uploaded audio file
-      const audioUrl = await this.supabaseService.getUrl('/audios', filename);
+			// Get the URL for the uploaded audio file
+			const audioUrl = await this.supabaseService.getUrl('/audios', filename)
 
-      return audioUrl;
-    } catch (e) {
-      // Log and propagate the error
-      console.error(e);
-      throw new ServiceUnavailableException('Failed to synthesize speech');
-    }
-  }
+			return audioUrl
+		} catch (e) {
+			// Log and propagate the error
+			console.error(e)
+			throw new ServiceUnavailableException('Failed to synthesize speech')
+		}
+	}
 
-  /**
-   * Transcribe audio from a buffer using the OpenAI Whisper model.
-   * @param audioBuffer - The buffer containing audio data
-   * @param language - The language of the audio
-   * @returns The transcribed text
-   */
-  async transcribeAudio(audioBuffer: Buffer, language: string): Promise<string> {
-    // Convert the audio buffer to a file object
-    const blob = new Blob([audioBuffer], {
-      type: 'audio/wav',
-    });
-    const file = new File([blob], 'input.wav', { type: 'audio/wav' });
+	/**
+	 * Transcribe audio from a buffer using the OpenAI Whisper model.
+	 * @param audioBuffer - The buffer containing audio data
+	 * @param language - The language of the audio
+	 * @returns The transcribed text
+	 */
+	async transcribeAudio(
+		audioBuffer: Buffer,
+		language: string
+	): Promise<string> {
+		// Convert the audio buffer to a file object
+		const blob = new Blob([audioBuffer], {
+			type: 'audio/wav',
+		})
+		const file = new File([blob], 'input.wav', { type: 'audio/wav' })
 
-    try {
-      // Make a request to the Whisper model for audio transcription
-      const whisperResponse = await this.openai.audio.transcriptions.create({
-        model: 'whisper-1',
-        language,
-        file,
-        response_format: 'json',
-      });
+		try {
+			// Make a request to the Whisper model for audio transcription
+			const whisperResponse = await this.openai.audio.transcriptions.create({
+				model: 'whisper-1',
+				language,
+				file,
+				response_format: 'json',
+			})
 
-      // Return the transcribed text
-      return whisperResponse.text;
-    } catch (e) {
-      // Log and propagate the error
-      console.error(e);
-      throw new ServiceUnavailableException('Failed to transcribe audio');
-    }
-  }
+			// Return the transcribed text
+			return whisperResponse.text
+		} catch (e) {
+			// Log and propagate the error
+			console.error(e)
+			throw new ServiceUnavailableException('Failed to transcribe audio')
+		}
+	}
 
-  /**
-   * Generate a response to an image-related prompt using the ChatGPT Vision model.
-   * @param text - The text prompt
-   * @param url - The URL of the image
-   * @returns A string containing the generated response
-   */
-  async chatGptVision(text: string, url: string): Promise<string> {
-    try {
-      // Make a request to the ChatGPT Vision model
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4-vision-preview',
-        messages: [
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text },
-              { type: 'image_url', image_url: { url, detail: 'high' } },
-            ],
-          },
-        ],
-        temperature: 0.5,
-        max_tokens: 1000,
-      });
+	/**
+	 * Generate a response to an image-related prompt using the ChatGPT Vision model.
+	 * @param text - The text prompt
+	 * @param url - The URL of the image
+	 * @returns A string containing the generated response
+	 */
+	async chatGptVision(text: string, url: string): Promise<string> {
+		try {
+			// Make a request to the ChatGPT Vision model
+			const completion = await this.openai.chat.completions.create({
+				model: 'gpt-4-vision-preview',
+				messages: [
+					{
+						role: 'user',
+						content: [
+							{ type: 'text', text },
+							{ type: 'image_url', image_url: { url, detail: 'high' } },
+						],
+					},
+				],
+				temperature: 0.5,
+				max_tokens: 1000,
+			})
 
-      // Extract the content from the response
-      const [content] = completion.choices.map((choice) => choice.message.content);
+			// Extract the content from the response
+			const [content] = completion.choices.map(choice => choice.message.content)
 
-      return content;
-    } catch (e) {
-      // Log and propagate the error
-      console.error(e);
-      throw new ServiceUnavailableException('Unable to recognize image');
-    }
-  }
+			return content
+		} catch (e) {
+			// Log and propagate the error
+			console.error(e)
+			throw new ServiceUnavailableException('Unable to recognize image')
+		}
+	}
 
-  /**
-   * Generate an image based on a text prompt using the OpenAI DALL-E model.
-   * @param text - The text prompt for image generation
-   * @returns A URL pointing to the generated image
-   */
-  async generateImage(text: string): Promise<string> {
-    try {
-      // Make a request to the DALL-E model for image generation
-      const { data } = await this.openai.images.generate({
-        model: 'dall-e-3',
-        prompt: text,
-        response_format: 'url',
-      });
+	/**
+	 * Generate an image based on a text prompt using the OpenAI DALL-E model.
+	 * @param text - The text prompt for image generation
+	 * @returns A URL pointing to the generated image
+	 */
+	async generateImage(text: string): Promise<string> {
+		try {
+			// Make a request to the DALL-E model for image generation
+			const { data } = await this.openai.images.generate({
+				model: 'dall-e-3',
+				prompt: text,
+				response_format: 'url',
+			})
 
-      // Return the URL of the generated image
-      return data[0].url;
-    } catch (e) {
-      // Log and propagate the error
-      console.error(e);
-      throw new ServiceUnavailableException('Failed to generate image');
-    }
-  }
+			// Return the URL of the generated image
+			return data[0].url
+		} catch (e) {
+			// Log and propagate the error
+			console.error(e)
+			throw new ServiceUnavailableException('Failed to generate image')
+		}
+	}
 }
 ```
 
