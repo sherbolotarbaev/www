@@ -3,9 +3,12 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { siteConfig } from '~/config/site'
 
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import TopLoadingBar from 'nextjs-toploader'
 import Providers from 'providers'
 import { Toaster } from 'ui/toaster'
+
 import { cn } from 'utils'
 
 import localFont from 'next/font/local'
@@ -73,6 +76,8 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
 					<TopLoadingBar color='#418af4' showSpinner={false} height={3} />
 					<Providers>{children}</Providers>
 					<Toaster />
+					<Analytics />
+					<SpeedInsights />
 				</body>
 			</html>
 		</>
