@@ -1,18 +1,17 @@
 import type { Metadata } from 'next'
 
-import Link from 'next/link'
-import { Card, CardDescription, CardHeader, CardTitle } from 'ui/card'
-import { Separator } from 'ui/separator'
+import BlogPosts from 'shared/ui/blog-posts'
 
-import { formatDate } from 'date-fns'
+import { getPostViews } from 'api/post/ssr'
 import { getBlogPosts } from 'lib/blog'
 
 export const metadata: Metadata = {
-	title: 'Sign in',
+	title: 'Blog',
 }
 
-export default function Blog() {
+export default async function Blog() {
 	const blogPosts = getBlogPosts()
+	const allViews = await getPostViews()
 
 	return (
 		<div className='container'>
@@ -27,46 +26,7 @@ export default function Blog() {
 				</p>
 			</header>
 
-			<ul className='space-y-6'>
-				{blogPosts.map(
-					({ slug, metadata: { title, summary, publishedAt }, content }) => {
-						const formattedDate = formatDate(
-							new Date(publishedAt),
-							'MMM dd, yyyy'
-						)
-
-						const readingTime = Math.ceil(content.split(' ').length / 200)
-
-						return (
-							<li key={slug}>
-								<Link href={`/blog/${slug}`} passHref>
-									<Card className='shadow-none transition-shadow hover:shadow-md hover:border-blue-500'>
-										<CardHeader className='p-4 gap-1'>
-											<CardTitle className='text-xl'>{title}</CardTitle>
-
-											<CardDescription>{summary}</CardDescription>
-
-											<Separator />
-
-											<CardDescription className='flex items-center gap-2 text-sm text-muted-foreground'>
-												<span className='flex items-center'>
-													{formattedDate}
-												</span>
-
-												<span className='text-muted-foreground'>•</span>
-
-												<span className='flex items-center'>
-													{readingTime} min read
-												</span>
-											</CardDescription>
-										</CardHeader>
-									</Card>
-								</Link>
-							</li>
-						)
-					}
-				)}
-			</ul>
+			<BlogPosts blogPosts={blogPosts} allViews={allViews} />
 		</div>
 	)
 }

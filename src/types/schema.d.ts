@@ -52,6 +52,5 @@ type PostLike = {
 
 type GuestbookMessageReaction = {
 	userId: number
-	messageId: number
 	emoji: string
 }

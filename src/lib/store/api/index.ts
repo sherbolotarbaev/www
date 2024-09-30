@@ -22,6 +22,6 @@ export const api = createApi({
 	baseQuery: baseQueryExtended,
 	refetchOnReconnect: false,
 	refetchOnFocus: false,
-	tagTypes: ['auth', 'me', 'guestbook'],
+	tagTypes: ['auth', 'me', 'guestbook', 'post'],
 	endpoints: () => ({}),
 })

@@ -4,6 +4,7 @@ import { siteConfig } from '~/config/site'
 
 import { getBlogPosts } from 'lib/blog'
 import { getBase64 } from 'lib/blur-data-url'
+import { getPostViews } from '~/lib/store/api/post/ssr'
 
 import BlogPostClient from './page.uc'
 
@@ -70,6 +71,7 @@ export default async function BlogPost({
 	} = post
 
 	const imageBlurData = image ? await getBase64(image) : undefined
+	const allViews = await getPostViews()
 
 	return (
 		<BlogPostClient
@@ -87,6 +89,7 @@ export default async function BlogPost({
 					: undefined
 			}
 			content={content}
+			allViews={allViews}
 		/>
 	)
 }

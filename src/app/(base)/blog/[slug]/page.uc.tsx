@@ -4,12 +4,12 @@ import { Suspense } from 'react'
 import { siteConfig } from '~/config/site'
 
 import MDXContent from 'components/mdx-content'
+import { useAddPostViewsCount } from 'hooks/use-post-views-count'
 import Image from 'next/image'
 import Script from 'next/script'
+import { BlogPostMeta } from 'shared/ui/blog-posts'
 
 import { formatDate, formatDistanceToNow } from 'date-fns'
-
-import { CalendarIcon, ClockIcon } from 'lucide-react'
 
 interface BlogPostClientProps {
 	title: string
@@ -22,6 +22,7 @@ interface BlogPostClientProps {
 		blurData: string | undefined
 	}
 	content: string
+	allViews: PostView[]
 }
 
 export default function BlogPostClient({
@@ -32,13 +33,14 @@ export default function BlogPostClient({
 	publishedAt,
 	image,
 	content,
+	allViews,
 }: Readonly<BlogPostClientProps>) {
 	const formattedDate = formatDate(new Date(publishedAt), 'MMM dd, yyyy')
 	const distance = formatDistanceToNow(new Date(publishedAt), {
 		addSuffix: true,
 	})
-
 	const readingTime = Math.ceil(content.split(' ').length / 200)
+	const { views } = useAddPostViewsCount(allViews, slug)
 
 	const jsonLd = {
 		'@context': 'https://schema.org',
@@ -71,19 +73,13 @@ export default function BlogPostClient({
 				<header className='mb-8 flex flex-col gap-4'>
 					<h1 className='text-2xl font-bold'>{title}</h1>
 
-					<div className='flex items-center gap-2 text-sm text-muted-foreground'>
-						<span className='flex items-center'>
-							<CalendarIcon className='size-4 mr-1' />
-							{formattedDate} ({distance})
-						</span>
-
-						<span className='text-muted-foreground'>•</span>
-
-						<span className='flex items-center'>
-							<ClockIcon className='size-4 mr-1' />
-							{readingTime} min read
-						</span>
-					</div>
+					<BlogPostMeta
+						variant='detailed'
+						formattedDate={formattedDate}
+						distance={distance}
+						readingTime={readingTime}
+						views={views}
+					/>
 
 					{image && (
 						<Image
@@ -102,7 +98,7 @@ export default function BlogPostClient({
 				</header>
 
 				<div className='prose lg:prose-xl'>
-					<Suspense fallback={<div>Loading...</div>}>
+					<Suspense fallback={null}>
 						<MDXContent source={content} />
 					</Suspense>
 				</div>
