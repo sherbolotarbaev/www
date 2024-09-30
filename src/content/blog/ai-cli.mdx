@@ -1,0 +1,168 @@
+---
+title: 'AI CLI (OpenAI) 🤖'
+private: 'false'
+publishedAt: '2024-05-12'
+image: '/images/OpenAI-CLI.jpg'
+author: 'Sher Arbaev'
+summary: 'A command-line interface (CLI) for interacting with an AI model using OpenAI's API. This CLI allows users to engage in text-based conversations with the AI model and receive responses in real-time.'
+---
+
+## Features 🪄
+
+- **Initiate Conversations**: Start conversations with the AI model via a simple command-line interface.
+- **Real-time Responses**: Send messages to the AI model and receive responses instantly.
+- **Multiple AI Models**: Supports various AI models provided by OpenAI, including GPT-3.5 Turbo and GPT-4.
+- **Customizable and Extendable**: Easily customize and extend for different use cases.
+
+## Prerequisites ⚙️
+
+Before using this CLI, you need to obtain an API key from OpenAI. You can sign up for an account and get your API key [here](https://openai.com).
+
+**Add API Key**: Create a `.env` file in the root directory and add your OpenAI API key:
+
+```makefile
+OPENAI_API_KEY='your-api-key'
+```
+
+## Code Structure 🏗️
+
+```typescript
+// index.ts
+import { createInterface } from 'readline'
+import { config } from 'dotenv'
+import { AI } from './lib/ai'
+
+config()
+
+const apiKey = process.env.OPENAI_API_KEY || ''
+const ai = new AI(apiKey)
+const readline = createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const prompt =
+	'Assistance is needed across a spectrum of tasks. Your responses are expected to exude elegance and grace, reflecting a commitment to aesthetic excellence.'
+
+async function main() {
+	console.clear()
+	console.info('[INFO] starting stream conversation.')
+	console.log('\n')
+
+	readline.question('Type your message: ', async input => {
+		console.log('\n')
+
+		if (input.length) {
+			await newConversation(input)
+		}
+
+		readline.close()
+		console.log('\n')
+		console.info('[INFO] stream closed.')
+	})
+}
+
+main()
+
+const newConversation = async (input: string) => {
+	const messages = [
+		{ role: 'system', content: prompt },
+		{ role: 'user', content: input },
+	]
+
+	const params = {
+		messages,
+		model: 'gpt-4',
+	}
+
+	const output = await ai.completion(params)
+
+	for await (const chunk of output) {
+		const content = ai.extractContent(chunk) ?? ''
+		process.stdout.write(content)
+	}
+}
+```
+
+This file serves as the entry point for our CLI application. It handles user input, communicates with the AI model, and displays the responses in real-time. Let's take a closer look at its key features:
+
+- **User Input**: We use the `readline` module to prompt users to type their messages.
+- **AI Interaction**: Messages typed by the user are sent to the AI model for processing using the `AI` class from `lib/ai.ts`.
+- **Real-time Responses**: The AI model's responses are displayed to the user as they are received, providing an interactive conversational experience.
+
+```typescript
+// lib/ai.ts
+import { OpenAI } from 'openai'
+import { ChatCompletionChunk } from 'openai/resources'
+import { ChatCompletionCreateParamsBase } from 'openai/resources/chat/completions'
+
+export class AI {
+	private openai: OpenAI
+
+	constructor(apiKey: string) {
+		this.openai = new OpenAI({ apiKey })
+	}
+
+	public async completion({
+		messages,
+		model = 'gpt-3.5-turbo',
+		temperature = 0.5,
+		max_tokens = 400,
+	}: ChatCompletionCreateParamsBase) {
+		console.log(`${model}:`)
+
+		try {
+			const completion = await this.openai.chat.completions.create({
+				messages,
+				model,
+				temperature,
+				max_tokens,
+				stream: true,
+			})
+
+			return completion
+		} catch (error) {
+			console.error('[ERROR] new completion failed:', error.message)
+			return
+		}
+	}
+
+	extractContent(completion: ChatCompletionChunk): string | undefined {
+		for (const choice of completion.choices) {
+			if (choice.delta && choice.delta.content) {
+				return choice.delta.content
+			}
+		}
+	}
+}
+```
+
+The `AI` class encapsulates the functionality for interacting with OpenAI's API. It abstracts away the complexity of making API requests and processing the AI model's responses. Here's what it does:
+
+- **API Integration**: The `AI` class initializes the OpenAI client with the provided API key and exposes a method (`completion`) for sending messages to the AI model.
+- **Response Handling**: It handles the streaming responses from the AI model, extracting and displaying the content to the user in real-time.
+
+## Usage ✨
+
+1. **Run the CLI**: Start the CLI (locally):
+
+```bash
+pnpm dev
+```
+
+2. **Start Conversations**: Follow the prompts to initiate a conversation with the AI model.
+3. **Send Messages**: Type your message and press Enter to send it to the AI model.
+
+## Configuration ⚙️
+
+You can customize the behavior of the CLI by modifying the following parameters in the `index.ts` file:
+
+- **`prompt`**: Prompt: Define the prompt for instructing the AI on the desired response. Refer to the prompt engineering guide [here](https://platform.openai.com/docs/guides/prompt-engineering).
+- **`model`**: Choose the AI model to use for
+  generating responses <br /> (e.g., `gpt-3.5-turbo`, `gpt-4`).
+- **`temperature`**: Adjust the temperature parameter to control the randomness of the AI's responses.
+- **`max_tokens`**: Set the maximum number of tokens to generate for each response.
+
+#### GitHub Repository:
+
+[https://github.com/sherbolotarbaev/ai](https://github.com/sherbolotarbaev/ai)

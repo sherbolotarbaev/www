@@ -26,6 +26,7 @@
 			"hooks/*": ["./src/lib/hooks/*"],
 			"api/*": ["./src/lib/store/api/*"],
 			"providers": ["./src/lib/providers"],
+			"mdx/*": ["./src/lib/mdx/*"],
 			"widgets/*": ["./src/widgets/*"],
 			"shared/*": ["./src/shared/*"]
 		}

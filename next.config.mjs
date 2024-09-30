@@ -5,8 +5,10 @@ const nextConfig = {
 	// 		exclude: ['error'],
 	// 	},
 	// },
+	transpilePackages: ['next-mdx-remote'],
 	images: {
 		formats: ['image/avif', 'image/webp'],
+		domains: ['www.sherbolotarbaev.co'],
 	},
 }
 
