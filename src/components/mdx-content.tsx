@@ -88,13 +88,15 @@ const components: MDXComponents = {
 			/>
 		</div>
 	),
-	a: ({ href }) =>
+	a: ({ children, href }) =>
 		href ? (
 			<Link
-				className='font-medium text-primary underline underline-offset-4'
+				className='font-medium text-blue-500 hover:underline'
 				href={href}
 				target='_blank'
-			/>
+			>
+				{children}
+			</Link>
 		) : null,
 	code: ({ className, ...props }) => (
 		<code
@@ -106,6 +108,7 @@ const components: MDXComponents = {
 		const languageMatch = className?.match(/language-(\w+)/)
 		const language = languageMatch ? languageMatch[1] : 'plain'
 		const codeContent = ((children as any).props.raw || '').trim()
+		const isBash = language === 'bash'
 
 		return (
 			<Card className='relative p-4 my-6 shadow-none bg-zinc-900'>
@@ -114,7 +117,7 @@ const components: MDXComponents = {
 				<SyntaxHighlighter
 					language={language}
 					style={codeTheme}
-					showLineNumbers={true}
+					showLineNumbers={!isBash}
 					wrapLines={true}
 					customStyle={{
 						margin: 0,
@@ -122,12 +125,16 @@ const components: MDXComponents = {
 						fontSize: '14px',
 						backgroundColor: 'transparent',
 					}}
-					lineNumberStyle={{
-						minWidth: '2.2em',
-						paddingRight: '1.2em',
-						userSelect: 'none',
-						textAlign: 'right',
-					}}
+					lineNumberStyle={
+						!isBash
+							? {
+									minWidth: '2.2em',
+									paddingRight: '1.2em',
+									userSelect: 'none',
+									textAlign: 'right',
+							  }
+							: undefined
+					}
 				>
 					{codeContent}
 				</SyntaxHighlighter>
@@ -141,7 +148,7 @@ const components: MDXComponents = {
 			<Link href={`#${slug}`} className='no-underline'>
 				<h1
 					id={slug}
-					className='scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl mb-4'
+					className='scroll-m-20 text-3xl font-extrabold tracking-tight mt-12 mb-4'
 				>
 					{children}
 				</h1>
@@ -198,7 +205,7 @@ const components: MDXComponents = {
 	),
 	li: ({ children }) => <li>{children}</li>,
 	blockquote: ({ children }) => (
-		<blockquote className='mt-6 border-l-2 border-muted-foreground pl-6 italic'>
+		<blockquote className='mt-6 border-l-2 border-l-muted-foreground text-muted-foreground pl-6 italic'>
 			{children}
 		</blockquote>
 	),

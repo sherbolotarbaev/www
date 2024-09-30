@@ -1,11 +1,53 @@
-import MDXContent from 'components/mdx-content'
-import { getBlogPosts } from 'lib/blog'
-import Image from 'next/image'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
+import { siteConfig } from '~/config/site'
 
-import { formatDistanceToNow } from 'date-fns'
-import { CalendarIcon, ClockIcon, UserIcon } from 'lucide-react'
+import { getBlogPosts } from 'lib/blog'
+import { getBase64 } from 'lib/blur-data-url'
+
+import BlogPostClient from './page.uc'
+
+interface GenerateMetadataProps {
+	params: { slug: string }
+}
+
+export async function generateMetadata({
+	params: { slug },
+}: Readonly<GenerateMetadataProps>): Promise<Metadata | undefined> {
+	const post = getBlogPosts().find(post => post.slug === slug)
+
+	if (!post) {
+		return
+	}
+
+	const {
+		title,
+		publishedAt: publishedTime,
+		summary: description,
+		image,
+	} = post.metadata
+
+	const ogImage = image
+		? `${siteConfig.url}${image}`
+		: `${siteConfig.url}/og?title=${title}`
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			type: 'article',
+			publishedTime,
+			url: `${siteConfig.url}/blog/${post.slug}`,
+			images: [
+				{
+					url: ogImage,
+				},
+			],
+		},
+	}
+}
 
 interface BlogPostProps {
 	params: {
@@ -13,7 +55,7 @@ interface BlogPostProps {
 	}
 }
 
-export default function BlogPost({
+export default async function BlogPost({
 	params: { slug },
 }: Readonly<BlogPostProps>) {
 	const post = getBlogPosts().find(post => post.slug === slug)
@@ -23,52 +65,28 @@ export default function BlogPost({
 	}
 
 	const {
-		metadata: { title, publishedAt, author, image },
+		metadata: { title, summary, author, publishedAt, image },
 		content,
 	} = post
 
+	const imageBlurData = image ? await getBase64(image) : undefined
+
 	return (
-		<div className='container mx-auto px-4 py-8'>
-			<article className='max-w-3xl mx-auto'>
-				<header className='mb-8'>
-					<h1 className='text-2xl font-bold mb-4'>{title}</h1>
-
-					<div className='flex items-center space-x-4 text-sm text-muted-foreground mb-4'>
-						<span className='flex items-center'>
-							<UserIcon className='w-4 h-4 mr-1' />
-							{author}
-						</span>
-
-						<span className='flex items-center'>
-							<CalendarIcon className='w-4 h-4 mr-1' />
-							{formatDistanceToNow(new Date(publishedAt), {
-								addSuffix: true,
-							})}
-						</span>
-
-						<span className='flex items-center'>
-							<ClockIcon className='w-4 h-4 mr-1' />
-							{Math.ceil(content.split(' ').length / 200)} min read
-						</span>
-					</div>
-
-					{image && (
-						<Image
-							src={image}
-							alt={title}
-							width={800}
-							height={400}
-							className='w-full min-h-64 object-cover rounded-lg border'
-						/>
-					)}
-				</header>
-
-				<div className='prose lg:prose-xl'>
-					<Suspense fallback={<div>Loading...</div>}>
-						<MDXContent source={content} />
-					</Suspense>
-				</div>
-			</article>
-		</div>
+		<BlogPostClient
+			title={title}
+			slug={slug}
+			summary={summary}
+			author={author}
+			publishedAt={publishedAt}
+			image={
+				image
+					? {
+							url: image,
+							blurData: imageBlurData,
+					  }
+					: undefined
+			}
+			content={content}
+		/>
 	)
 }

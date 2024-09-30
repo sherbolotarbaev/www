@@ -81,9 +81,20 @@ const config: Config = {
 					'0%,70%,100%': { opacity: '1' },
 					'20%,50%': { opacity: '0' },
 				},
+				'text-gradient': {
+					'0%, 100%': {
+						'background-size': '200% 200%',
+						'background-position': 'left center',
+					},
+					'50%': {
+						'background-size': '200% 200%',
+						'background-position': 'right center',
+					},
+				},
 			},
 			animation: {
 				'caret-blink': 'caret-blink 1.25s ease-out infinite',
+				'text-gradient': 'text-gradient 4s ease infinite',
 			},
 		},
 	},
