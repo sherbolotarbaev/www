@@ -5,11 +5,14 @@ import { siteConfig } from '~/config/site'
 
 import MDXContent from 'components/mdx-content'
 import { useAddPostViewsCount } from 'hooks/use-post-views-count'
+import { toast } from 'hooks/use-toast'
 import Image from 'next/image'
 import Script from 'next/script'
-import { BlogPostMeta } from 'shared/ui/blog-posts'
+import { BlogPostBreadcrumb, BlogPostMeta } from 'shared/ui/blog-posts'
+import { Button } from 'ui/button'
 
 import { formatDate, formatDistanceToNow } from 'date-fns'
+import { Share2 } from 'lucide-react'
 
 interface BlogPostClientProps {
 	title: string
@@ -60,6 +63,22 @@ export default function BlogPostClient({
 		timeRequired: `PT${readingTime}M`,
 	}
 
+	const handleShare = () => {
+		if (navigator.share) {
+			navigator.share({
+				title: title,
+				text: summary,
+				url: window.location.href,
+			})
+		} else {
+			// Fallback for browsers that don't support Web Share API
+			navigator.clipboard.writeText(window.location.href)
+			toast({
+				title: `Link copied to clipboard`,
+			})
+		}
+	}
+
 	return (
 		<div className='container'>
 			<Script
@@ -69,17 +88,26 @@ export default function BlogPostClient({
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 			/>
 
+			<BlogPostBreadcrumb title={title} slug={slug} />
+
 			<article className='max-w-3xl'>
 				<header className='mb-8 flex flex-col gap-4'>
 					<h1 className='text-2xl font-bold'>{title}</h1>
 
-					<BlogPostMeta
-						variant='detailed'
-						formattedDate={formattedDate}
-						distance={distance}
-						readingTime={readingTime}
-						views={views}
-					/>
+					<div className='flex justify-between md:items-center'>
+						<BlogPostMeta
+							variant='detailed'
+							formattedDate={formattedDate}
+							distance={distance}
+							readingTime={readingTime}
+							views={views}
+						/>
+
+						<Button onClick={handleShare} variant='outline' size='sm'>
+							<Share2 className='size-3.5 mr-1' />
+							Share
+						</Button>
+					</div>
 
 					{image && (
 						<Image

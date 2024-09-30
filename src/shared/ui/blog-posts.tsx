@@ -3,6 +3,13 @@
 import React from 'react'
 
 import Link from 'next/link'
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbSeparator,
+} from 'ui/breadcrumb'
 import { Card, CardDescription, CardHeader, CardTitle } from 'ui/card'
 import { Separator } from 'ui/separator'
 
@@ -93,7 +100,7 @@ export const BlogPostMeta: React.FC<BlogPostMetaProps> = React.memo(
 
 		return (
 			<div className='flex flex-col gap-2 md:flex-row text-sm text-muted-foreground'>
-				<div className='flex items-center gap-1 mb-2 md:mb-0'>
+				<div className='flex items-center gap-2'>
 					<CalendarIcon className='h-4 w-4' />
 					<span>{metaItems[0].text}</span>
 				</div>
@@ -118,3 +125,36 @@ export const BlogPostMeta: React.FC<BlogPostMetaProps> = React.memo(
 		)
 	}
 )
+
+interface BlogPostBreadcrumbProps {
+	title: string
+	slug: string
+}
+
+export const BlogPostBreadcrumb: React.FC<BlogPostBreadcrumbProps> = ({
+	title,
+	slug,
+}) => {
+	const breadcrumbItems = [
+		{ name: 'Home', href: '/' },
+		{ name: 'Blog', href: '/blog' },
+		{ name: title, href: `/blog/${slug}` },
+	]
+
+	return (
+		<Breadcrumb className='mb-8'>
+			<BreadcrumbList>
+				{breadcrumbItems.map((item, index) => (
+					<React.Fragment key={item.href}>
+						{index > 0 && <BreadcrumbSeparator />}
+						<BreadcrumbItem>
+							<BreadcrumbLink asChild>
+								<Link href={item.href}>{item.name}</Link>
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+					</React.Fragment>
+				))}
+			</BreadcrumbList>
+		</Breadcrumb>
+	)
+}
