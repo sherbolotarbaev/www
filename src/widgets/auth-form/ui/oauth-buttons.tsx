@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Button } from 'ui/button'
 
@@ -8,9 +8,14 @@ import { oauthProviders } from '../lib/oauth-providers'
 
 const OAuthButtons = () => {
 	const router = useRouter()
+	const next = useSearchParams().get('next')
 
 	const handleOAuthRedirect = (path: string) =>
-		router.push(`${process.env.NEXT_PUBLIC_API_URL}/oauth2/${path}`)
+		router.push(
+			`${process.env.NEXT_PUBLIC_API_URL}/oauth2/${path}${
+				next ? `?next=${next}` : ''
+			}`
+		)
 
 	return (
 		<div className='space-y-4'>

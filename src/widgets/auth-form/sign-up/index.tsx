@@ -1,5 +1,7 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
+
 import Link from 'next/link'
 import {
 	Card,
@@ -12,6 +14,8 @@ import {
 import OAuthButtons from '../ui/oauth-buttons'
 
 export const SignUpForm = () => {
+	const next = useSearchParams().get('next')
+
 	return (
 		<Card className='w-full max-w-sm mx-auto border-none shadow-none'>
 			<CardHeader className='px-0'>
@@ -31,7 +35,10 @@ export const SignUpForm = () => {
 			<CardFooter className='px-0 justify-center'>
 				<p className='text-muted-foreground'>
 					Already have an account?{' '}
-					<Link href='/sign-in' className='text-blue-500'>
+					<Link
+						href={next && next !== '/' ? `/sign-in?next=${next}` : '/sign-in'}
+						className='text-blue-500'
+					>
 						Sign In
 					</Link>
 				</p>

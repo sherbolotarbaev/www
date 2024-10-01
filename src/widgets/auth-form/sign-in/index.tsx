@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 import Link from 'next/link'
@@ -17,6 +18,8 @@ import OAuthButtons from '../ui/oauth-buttons'
 import OtpForm from '../ui/otp-form'
 
 export const SignInForm = () => {
+	const next = useSearchParams().get('next')
+
 	const [step, setStep] = useState<'email' | 'otp'>('email')
 	const [email, setEmail] = useState('')
 
@@ -49,7 +52,10 @@ export const SignInForm = () => {
 				<CardFooter className='px-0 justify-center'>
 					<p className='text-muted-foreground'>
 						Don't have an account?{' '}
-						<Link href='/sign-up' className='text-blue-500'>
+						<Link
+							href={next && next !== '/' ? `/sign-up?next=${next}` : '/sign-up'}
+							className='text-blue-500'
+						>
 							Sign Up
 						</Link>
 					</p>

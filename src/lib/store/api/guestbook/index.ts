@@ -38,34 +38,6 @@ const api = index.injectEndpoints({
 			}),
 			providesTags: ['guestbook'],
 		}),
-
-		addMessageReaction: build.mutation<
-			AddMessageReactionResponse,
-			AddMessageReactionRequest
-		>({
-			query: ({ id, emoji }) => ({
-				url: `/guestbook/${id}/reactions`,
-				method: 'POST',
-				body: {
-					emoji,
-				},
-			}),
-			invalidatesTags: ['guestbook'],
-		}),
-
-		removeMessageReaction: build.mutation<
-			RemoveMessageReactionResponse,
-			RemoveMessageReactionRequest
-		>({
-			query: ({ id, emoji }) => ({
-				url: `/guestbook/${id}/reactions`,
-				method: 'DELETE',
-				body: {
-					emoji,
-				},
-			}),
-			invalidatesTags: ['guestbook'],
-		}),
 	}),
 })
 
@@ -74,7 +46,5 @@ export const {
 	useDeleteMessageMutation,
 	useEditMessageMutation,
 	useGetMessagesQuery,
-	useAddMessageReactionMutation,
-	useRemoveMessageReactionMutation,
 } = api
 export default api

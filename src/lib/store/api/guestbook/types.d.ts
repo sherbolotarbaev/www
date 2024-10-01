@@ -32,17 +32,3 @@ type GetMessagesResponse = {
 	count: number
 	items: GuestbookMessage[]
 }
-
-type AddMessageReactionRequest = {
-	id: number
-	emoji: string
-}
-
-type AddMessageReactionResponse = GuestbookMessageReaction
-
-type RemoveMessageReactionRequest = {
-	id: number
-	emoji: string
-}
-
-type RemoveMessageReactionResponse = GuestbookMessageReaction
