@@ -92,7 +92,9 @@ function useMessageCache() {
 	const editMessageContent = useCallback(
 		async (messageId: number, newBody: string) => {
 			const updatedMessages = messages.map(message =>
-				message.id === messageId ? { ...message, body: newBody } : message
+				message.id === messageId
+					? { ...message, body: newBody, isEdited: true }
+					: message
 			)
 
 			setMessages(updatedMessages)
