@@ -2,7 +2,7 @@
 
 import type { MDXComponents } from 'mdx/types'
 import { MDXRemote, type MDXRemoteProps } from 'next-mdx-remote/rsc'
-import React from 'react'
+import React, { useState } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { coldarkDark as codeTheme } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import rehypePrism from 'rehype-prism-plus'
@@ -11,7 +11,6 @@ import { visit } from 'unist-util-visit'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
 import { Button } from 'ui/button'
 import { Card } from 'ui/card'
 import {
@@ -43,8 +42,8 @@ interface CopyButtonProps {
 const CopyButton: React.FC<CopyButtonProps> = ({ content }) => {
 	const [copied, setCopied] = useState(false)
 
-	const copy = async () => {
-		await navigator.clipboard.writeText(content)
+	const copy = () => {
+		navigator.clipboard.writeText(content)
 		setCopied(true)
 		setTimeout(() => setCopied(false), 2000)
 	}

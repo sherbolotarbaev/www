@@ -14,7 +14,10 @@ import { Card, CardDescription, CardHeader, CardTitle } from 'ui/card'
 import { Separator } from 'ui/separator'
 
 import { formatDate } from 'date-fns'
-import { useGetPostViewsCount } from 'hooks/use-post-views-count'
+import {
+	useAddPostViewsCount,
+	useGetPostViewsCount,
+} from 'hooks/use-post-views-count'
 import type { Post } from 'lib/blog'
 
 import { cn } from 'utils'
@@ -32,7 +35,6 @@ const BlogPosts: React.FC<BlogPostsProps> = ({ blogPosts, allViews }) => (
 			({ slug, metadata: { title, summary, publishedAt }, content }) => {
 				const formattedDate = formatDate(new Date(publishedAt), 'MMM dd, yyyy')
 				const readingTime = Math.ceil(content.split(' ').length / 200)
-				const { views } = useGetPostViewsCount(allViews, slug)
 
 				return (
 					<li key={slug}>
@@ -50,7 +52,8 @@ const BlogPosts: React.FC<BlogPostsProps> = ({ blogPosts, allViews }) => (
 											variant='compact'
 											formattedDate={formattedDate}
 											readingTime={readingTime}
-											views={views}
+											allViews={allViews}
+											slug={slug}
 										/>
 									</CardDescription>
 								</CardHeader>
@@ -70,11 +73,17 @@ interface BlogPostMetaProps {
 	formattedDate: string
 	distance?: string
 	readingTime: number
-	views: string
+	allViews: PostView[]
+	slug: string
 }
 
 export const BlogPostMeta: React.FC<BlogPostMetaProps> = React.memo(
-	({ variant, formattedDate, distance, readingTime, views }) => {
+	({ variant, formattedDate, distance, readingTime, allViews, slug }) => {
+		const { views } =
+			variant === 'compact'
+				? useGetPostViewsCount(allViews, slug)
+				: useAddPostViewsCount(allViews, slug)
+
 		const metaItems = [
 			{
 				icon: CalendarIcon,
