@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import Link from 'next/link'
 import {
@@ -22,7 +22,12 @@ import type { Post } from 'lib/blog'
 
 import { cn } from 'utils'
 
-import { CalendarIcon, ClockIcon, EyeIcon } from 'lucide-react'
+import {
+	type LucideProps,
+	CalendarIcon,
+	ClockIcon,
+	EyeIcon,
+} from 'lucide-react'
 
 interface BlogPostsProps {
 	blogPosts: Post[]
@@ -77,6 +82,13 @@ interface BlogPostMetaProps {
 	slug: string
 }
 
+type MetaItem = {
+	icon: React.ForwardRefExoticComponent<
+		Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+	>
+	text: string
+}
+
 export const BlogPostMeta: React.FC<BlogPostMetaProps> = React.memo(
 	({ variant, formattedDate, distance, readingTime, allViews, slug }) => {
 		const { views } =
@@ -84,7 +96,7 @@ export const BlogPostMeta: React.FC<BlogPostMetaProps> = React.memo(
 				? useGetPostViewsCount(allViews, slug)
 				: useAddPostViewsCount(allViews, slug)
 
-		const metaItems = [
+		const metaItems: MetaItem[] = [
 			{
 				icon: CalendarIcon,
 				text: distance ? `${formattedDate} (${distance})` : formattedDate,
@@ -140,11 +152,16 @@ interface BlogPostBreadcrumbProps {
 	slug: string
 }
 
+type BreadcrumbItem = {
+	name: string
+	href: string
+}
+
 export const BlogPostBreadcrumb: React.FC<BlogPostBreadcrumbProps> = ({
 	title,
 	slug,
 }) => {
-	const breadcrumbItems = [
+	const breadcrumbItems: BreadcrumbItem[] = [
 		{ name: 'Home', href: '/' },
 		{ name: 'Blog', href: '/blog' },
 		{ name: title, href: `/blog/${slug}` },
@@ -167,3 +184,104 @@ export const BlogPostBreadcrumb: React.FC<BlogPostBreadcrumbProps> = ({
 		</Breadcrumb>
 	)
 }
+
+type Heading = {
+	id: string
+	text: string
+	level: number
+	top: number
+}
+
+export const BlogPostContentNavigation = () => {
+	const [headings, setHeadings] = useState<Heading[]>([])
+	const [activeId, setActiveId] = useState<string>('')
+
+	const getHeadings = useCallback(() => {
+		return Array.from(document.querySelectorAll('h1, h2, h3, h4')).map(
+			element => ({
+				id: element.id,
+				text: element.textContent || '',
+				level: parseInt(element.tagName[1]),
+				top: element.getBoundingClientRect().top + window.scrollY,
+			})
+		)
+	}, [])
+
+	useEffect(() => {
+		const updateHeadings = () => {
+			setHeadings(getHeadings())
+		}
+
+		updateHeadings()
+		window.addEventListener('resize', updateHeadings)
+		return () => window.removeEventListener('resize', updateHeadings)
+	}, [getHeadings])
+
+	useEffect(() => {
+		let rafId: number
+
+		const handleScroll = () => {
+			cancelAnimationFrame(rafId)
+			rafId = requestAnimationFrame(() => {
+				const scrollPosition = window.scrollY + 100 // Offset for better UX
+				const currentHeading = headings.reduce(
+					(prev, current) =>
+						scrollPosition >= current.top && current.top > prev.top
+							? current
+							: prev,
+					headings[0]
+				)
+
+				if (currentHeading && currentHeading.id !== activeId) {
+					setActiveId(currentHeading.id)
+				}
+			})
+		}
+
+		handleScroll() // Call once to set initial active heading
+		window.addEventListener('scroll', handleScroll, { passive: true })
+		return () => {
+			window.removeEventListener('scroll', handleScroll)
+			cancelAnimationFrame(rafId)
+		}
+	}, [headings, activeId])
+
+	const memoizedHeadings = useMemo(() => headings, [headings])
+
+	if (memoizedHeadings.length === 0) {
+		return null
+	}
+
+	return (
+		<nav className='sticky top-20 min-w-72 max-h-[calc(100vh-6rem)] overflow-auto p-4 bg-background border rounded-lg shadow-sm'>
+			<h4 className='text-sm font-semibold mb-2'>Table of Contents</h4>
+			<ul className='space-y-2'>
+				{memoizedHeadings.map(heading => (
+					<HeadingLink
+						key={heading.id}
+						heading={heading}
+						isActive={activeId === heading.id}
+					/>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+const HeadingLink = React.memo(
+	({ heading, isActive }: { heading: Heading; isActive: boolean }) => (
+		<li style={{ marginLeft: `${(heading.level - 1) * 0.5}rem` }}>
+			<Link
+				href={`#${heading.id}`}
+				className={cn(
+					'text-sm transition-colors duration-200',
+					isActive
+						? 'text-primary font-medium'
+						: 'text-muted-foreground hover:text-foreground'
+				)}
+			>
+				{heading.text}
+			</Link>
+		</li>
+	)
+)

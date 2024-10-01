@@ -10,7 +10,11 @@ import { getBase64 } from 'lib/blur-data-url'
 import MDXContent from 'components/mdx-content'
 import Image from 'next/image'
 import Script from 'next/script'
-import { BlogPostBreadcrumb, BlogPostMeta } from 'shared/ui/blog-posts'
+import {
+	BlogPostBreadcrumb,
+	BlogPostContentNavigation,
+	BlogPostMeta,
+} from 'shared/ui/blog-posts'
 import ShareButton from 'shared/ui/share.button'
 
 interface GenerateMetadataProps {
@@ -113,43 +117,49 @@ export default async function BlogPost({
 
 			<BlogPostBreadcrumb title={title} slug={slug} />
 
-			<article className='max-w-3xl'>
-				<header className='mb-8 flex flex-col gap-4'>
-					<h1 className='text-2xl font-bold'>{title}</h1>
+			<div className='w-full flex flex-col lg:flex-row lg:gap-6'>
+				<article className='max-w-[34.5rem]'>
+					<header className='mb-8 flex flex-col gap-4'>
+						<h1 className='text-4xl font-bold'>{title}</h1>
 
-					<div className='flex justify-between md:items-center'>
-						<BlogPostMeta
-							variant='detailed'
-							formattedDate={formattedDate}
-							distance={distance}
-							readingTime={readingTime}
-							allViews={allViews}
-							slug={slug}
-						/>
+						<div className='flex justify-between md:items-center'>
+							<BlogPostMeta
+								variant='detailed'
+								formattedDate={formattedDate}
+								distance={distance}
+								readingTime={readingTime}
+								allViews={allViews}
+								slug={slug}
+							/>
 
-						<ShareButton />
+							<ShareButton />
+						</div>
+
+						{image && (
+							<Image
+								src={image}
+								alt={title}
+								width={700}
+								height={350}
+								loading='lazy'
+								className='w-full rounded-xl border'
+								placeholder='blur'
+								blurDataURL={imageBlurData}
+							/>
+						)}
+
+						<p>{summary}</p>
+					</header>
+
+					<div className='prose lg:prose-xl'>
+						<MDXContent source={content} />
 					</div>
+				</article>
 
-					{image && (
-						<Image
-							src={image}
-							alt={title}
-							width={700}
-							height={350}
-							loading='lazy'
-							className='w-full rounded-xl border'
-							placeholder='blur'
-							blurDataURL={imageBlurData}
-						/>
-					)}
-
-					<p>{summary}</p>
-				</header>
-
-				<div className='prose lg:prose-xl'>
-					<MDXContent source={content} />
-				</div>
-			</article>
+				<aside className='hidden lg:block'>
+					<BlogPostContentNavigation />
+				</aside>
+			</div>
 		</div>
 	)
 }
