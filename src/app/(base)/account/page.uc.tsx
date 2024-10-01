@@ -43,6 +43,7 @@ export default function AccountClient({ me }: Readonly<AccountClientProps>) {
 		register,
 		handleSubmit,
 		formState: { errors, isDirty },
+		setValue,
 	} = useForm<FormData>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -71,6 +72,8 @@ export default function AccountClient({ me }: Readonly<AccountClientProps>) {
 	const onSubmit: SubmitHandler<FormData> = async data => {
 		try {
 			await editMe(data).unwrap()
+			setValue('name', data.name)
+			setValue('surname', data.surname)
 			toast({
 				title: 'Account updated',
 				description: 'Your account details have been successfully updated.',
