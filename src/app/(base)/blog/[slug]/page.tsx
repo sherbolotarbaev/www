@@ -6,6 +6,7 @@ import { getPostViews } from 'api/post/ssr'
 import { formatDate, formatDistanceToNow } from 'date-fns'
 import { getBlogPosts } from 'lib/blog'
 import { getBase64 } from 'lib/blur-data-url'
+import { isMobileDevice } from 'lib/is-mobile-device'
 
 import MDXContent from 'components/mdx-content'
 import dynamic from 'next/dynamic'
@@ -97,6 +98,7 @@ export default async function BlogPost({
 		addSuffix: true,
 	})
 	const readingTime = Math.ceil(content.split(' ').length / 200)
+	const isMobile = isMobileDevice()
 
 	const jsonLd = {
 		'@context': 'https://schema.org',
@@ -166,9 +168,11 @@ export default async function BlogPost({
 					</div>
 				</article>
 
-				<aside className='hidden lg:block'>
-					<BlogPostContentNavigation />
-				</aside>
+				{!isMobile && (
+					<aside>
+						<BlogPostContentNavigation />
+					</aside>
+				)}
 			</div>
 		</div>
 	)
