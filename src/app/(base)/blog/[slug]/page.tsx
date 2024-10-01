@@ -8,14 +8,24 @@ import { getBlogPosts } from 'lib/blog'
 import { getBase64 } from 'lib/blur-data-url'
 
 import MDXContent from 'components/mdx-content'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Script from 'next/script'
 import {
 	BlogPostBreadcrumb,
-	BlogPostContentNavigation,
+	BlogPostContentNavigationSkeleton,
 	BlogPostMeta,
 } from 'shared/ui/blog-posts'
 import ShareButton from 'shared/ui/share.button'
+
+const BlogPostContentNavigation = dynamic(
+	() =>
+		import('shared/ui/blog-posts').then(mod => mod.BlogPostContentNavigation),
+	{
+		ssr: false,
+		loading: () => <BlogPostContentNavigationSkeleton />,
+	}
+)
 
 interface GenerateMetadataProps {
 	params: { slug: string }

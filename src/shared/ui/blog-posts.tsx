@@ -285,3 +285,22 @@ const HeadingLink = React.memo(
 		</li>
 	)
 )
+
+export const BlogPostContentNavigationSkeleton = () => {
+	return (
+		<nav className='sticky top-20 min-w-72 max-h-[calc(100vh-6rem)] overflow-auto p-4 bg-background border rounded-lg shadow-sm animate-pulse'>
+			<div className='h-5 w-32 bg-gray-200 rounded mb-4'></div>
+			<ul className='space-y-3'>
+				{[...Array(5)].map((_, index) => (
+					<li key={index} className='flex flex-col space-y-2'>
+						<div className='h-4 bg-gray-200 rounded w-full'></div>
+						<div className='h-4 bg-gray-200 rounded w-3/4'></div>
+						{index % 2 === 0 && (
+							<div className='h-4 bg-gray-200 rounded w-1/2 ml-4'></div>
+						)}
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
