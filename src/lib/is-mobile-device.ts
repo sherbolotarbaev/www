@@ -3,7 +3,7 @@
 import { headers } from 'next/headers'
 import { userAgent } from 'next/server'
 
-export function isMobileDevice() {
+export async function isMobileDevice() {
 	if (typeof process === 'undefined') {
 		throw new Error(
 			'[Server method] you are importing a server-only module outside of server'

@@ -98,7 +98,7 @@ export default async function BlogPost({
 		addSuffix: true,
 	})
 	const readingTime = Math.ceil(content.split(' ').length / 200)
-	const isMobile = isMobileDevice()
+	const isMobile = await isMobileDevice()
 
 	const jsonLd = {
 		'@context': 'https://schema.org',
