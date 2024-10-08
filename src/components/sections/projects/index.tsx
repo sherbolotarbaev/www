@@ -55,18 +55,18 @@ const ProjectCard: React.FC<Project> = ({
 			transition={{ duration: 0.5 }}
 		>
 			<Card className='overflow-hidden shadow-none h-full flex flex-col relative'>
-				<div className='relative z-20 h-56 w-full'>
+				<div className='relative h-56 w-full'>
 					<Image
 						src={image}
 						alt={title}
 						layout='fill'
 						objectFit='cover'
-						className='transition-transform duration-300 ease-in-out transform hover:scale-110'
+						className='z-20 transition-transform duration-300 ease-in-out transform hover:scale-110'
 						loading='lazy'
 					/>
 				</div>
 
-				<CardContent className='flex-grow p-6'>
+				<CardContent className='z-20 flex-grow p-6'>
 					<h3 className='text-xl font-semibold mb-2'>{title}</h3>
 					<p className='text-sm text-muted-foreground mb-4'>{description}</p>
 
@@ -79,7 +79,7 @@ const ProjectCard: React.FC<Project> = ({
 					</div>
 				</CardContent>
 
-				<CardFooter>
+				<CardFooter className='z-20'>
 					<Link
 						href={url}
 						target='_blank'
@@ -89,7 +89,7 @@ const ProjectCard: React.FC<Project> = ({
 					</Link>
 				</CardFooter>
 
-				<BorderBeam size={350} duration={8} delay={9} />
+				<BorderBeam size={250} duration={8} delay={9} />
 			</Card>
 		</motion.div>
 	)
