@@ -91,10 +91,16 @@ const config: Config = {
 						'background-position': 'right center',
 					},
 				},
+				'border-beam': {
+					'100%': {
+						'offset-distance': '100%',
+					},
+				},
 			},
 			animation: {
 				'caret-blink': 'caret-blink 1.25s ease-out infinite',
 				'text-gradient': 'text-gradient 4s ease infinite',
+				'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
 			},
 		},
 	},

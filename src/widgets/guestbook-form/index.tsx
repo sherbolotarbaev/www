@@ -3,6 +3,7 @@
 import React from 'react'
 
 import Link from 'next/link'
+import BorderBeam from 'shared/ui/border-beam'
 import { Button } from 'ui/button'
 import { Card, CardContent, CardHeader } from 'ui/card'
 import MessageForm from './ui/message-form'
@@ -30,9 +31,10 @@ const GuestbookForm: React.FC<GuestbookFormProps> = ({ me }) => {
 						</p>
 
 						<Link href='/sign-in?next=/guestbook' passHref>
-							<Button variant='outline'>
-								<UserIcon className='mr-2 size-3.5' />
+							<Button variant='outline' className='relative px-6 py-2 text-md'>
+								<UserIcon className='mr-2 size-4' />
 								Sign in
+								<BorderBeam size={65} duration={8} />
 							</Button>
 						</Link>
 					</div>

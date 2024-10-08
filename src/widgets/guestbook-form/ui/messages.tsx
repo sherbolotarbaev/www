@@ -1,6 +1,7 @@
 'use client'
 
 import { useGetMeQuery } from 'api/me'
+import { useGetReactionsQuery } from 'api/reaction'
 import { useMessageCache } from 'hooks/use-messages-cache'
 import React, { useMemo, useState } from 'react'
 
@@ -28,6 +29,12 @@ import { Input } from 'ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from 'ui/popover'
 import { Separator } from 'ui/separator'
 import { Skeleton } from 'ui/skeleton'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from 'ui/tooltip'
 
 import { MoreHorizontal, Pencil, Plus, Trash2 } from 'lucide-react'
 import { MdVerified } from 'react-icons/md'
@@ -54,6 +61,18 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 	onDelete,
 }) => {
 	const { data: me } = useGetMeQuery()
+	const { data: groupedReactions } = useGetReactionsQuery()
+
+	const getReactedNamesForEmoji = (
+		emoji: string,
+		reactions: { [emoji: string]: string[] }[]
+	) =>
+		reactions.length
+			? reactions
+					.map(reaction => reaction[emoji])
+					.filter(Boolean)
+					.flat()
+			: []
 
 	const [isEditing, setIsEditing] = useState(false)
 	const [editedMessage, setEditedMessage] = useState(entry.body)
@@ -155,26 +174,55 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 				<CardFooter className='p-4 flex justify-between items-start gap-1'>
 					{reactionCounts.size > 0 ? (
 						<div className='flex items-center gap-1 flex-wrap'>
-							{Array.from(reactionCounts.entries()).map(([emoji, count]) => (
-								<Button
-									key={emoji}
-									variant='outline'
-									size='sm'
-									className={cn(
-										'flex items-center rounded-xl space-x-1',
-										userReactions.has(emoji) &&
-											'bg-secondary hover:bg-secondary',
-										!me && 'cursor-default hover:bg-transparent'
-									)}
-									onClick={() => {
-										if (!me) return
-										onReactionUpdate(entry.id, emoji, !userReactions.has(emoji))
-									}}
-								>
-									<span>{emoji}</span>
-									<span>{count}</span>
-								</Button>
-							))}
+							{Array.from(reactionCounts.entries()).map(([emoji, count]) => {
+								const reactedNames = getReactedNamesForEmoji(
+									emoji,
+									groupedReactions
+										?.filter(({ messageId }) => messageId === entry.id)
+										.map(({ reactions }) => reactions)
+										.flat() || []
+								)
+
+								return (
+									<>
+										<TooltipProvider key={emoji}>
+											<Tooltip>
+												<TooltipTrigger asChild>
+													<Button
+														variant='outline'
+														size='sm'
+														className={cn(
+															'flex items-center rounded-xl space-x-1',
+															userReactions.has(emoji) &&
+																'bg-secondary hover:bg-secondary',
+															!me && 'cursor-default hover:bg-transparent'
+														)}
+														onClick={() => {
+															if (!me) return
+															onReactionUpdate(
+																entry.id,
+																emoji,
+																!userReactions.has(emoji)
+															)
+														}}
+													>
+														<span>{emoji}</span>
+														<span>{count}</span>
+													</Button>
+												</TooltipTrigger>
+
+												{reactedNames.length > 0 && (
+													<TooltipContent>
+														<p className='text-muted-foreground'>
+															{reactedNames.join(', ')}
+														</p>
+													</TooltipContent>
+												)}
+											</Tooltip>
+										</TooltipProvider>
+									</>
+								)
+							})}
 						</div>
 					) : (
 						<p className='text-sm text-muted-foreground'>No reactions found.</p>

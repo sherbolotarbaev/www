@@ -3,8 +3,8 @@ import { api as index } from '..'
 const api = index.injectEndpoints({
 	endpoints: build => ({
 		getReactions: build.query<GetReactionsResponse, GetReactionsRequest>({
-			query: ({ id }) => ({
-				url: `/guestbook/${id}/reactions`,
+			query: () => ({
+				url: '/guestbook/reactions',
 				method: 'GET',
 			}),
 			providesTags: ['reaction'],

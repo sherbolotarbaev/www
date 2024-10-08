@@ -7,6 +7,7 @@ import { useIntersectionObserver } from 'hooks/use-Intersection-observer'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import BorderBeam from 'shared/ui/border-beam'
 import { Badge } from 'ui/badge'
 import { Card, CardContent, CardFooter } from 'ui/card'
 
@@ -53,7 +54,7 @@ const ProjectCard: React.FC<Project> = ({
 			animate={isVisible ? { opacity: 1, y: 0 } : {}}
 			transition={{ duration: 0.5 }}
 		>
-			<Card className='overflow-hidden h-full flex flex-col'>
+			<Card className='overflow-hidden shadow-none h-full flex flex-col relative'>
 				<div className='relative h-56 w-full'>
 					<Image
 						src={image}
@@ -87,6 +88,8 @@ const ProjectCard: React.FC<Project> = ({
 						<Link2Icon /> {url}
 					</Link>
 				</CardFooter>
+
+				<BorderBeam size={350} duration={8} delay={9} />
 			</Card>
 		</motion.div>
 	)

@@ -1,14 +1,17 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 import { Button } from 'ui/button'
 
+import { toast } from 'hooks/use-toast'
 import { oauthProviders } from '../lib/oauth-providers'
 
 const OAuthButtons = () => {
 	const router = useRouter()
 	const next = useSearchParams().get('next')
+	const error = useSearchParams().get('error')
 
 	const handleOAuthRedirect = (path: string) =>
 		router.push(
@@ -16,6 +19,17 @@ const OAuthButtons = () => {
 				next ? `?next=${next}` : ''
 			}`
 		)
+
+	useEffect(() => {
+		if (error) {
+			toast({
+				variant: 'destructive',
+				title: 'Authentication Failed',
+				description:
+					"We couldn't log you in. Please try again or use a different method.",
+			})
+		}
+	}, [error])
 
 	return (
 		<div className='space-y-4'>

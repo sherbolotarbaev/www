@@ -21,7 +21,7 @@ const Hero = () => {
 				>
 					<Avatar className='size-20 ring-4 ring-background'>
 						<AvatarImage
-							src='https://ca.slack-edge.com/T01Q61HBB09-U05AFFV5LUX-83ddcc053149-512'
+							src='/images/sher.png'
 							alt='Sher Arbaev'
 							loading='lazy'
 						/>

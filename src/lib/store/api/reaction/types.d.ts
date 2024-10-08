@@ -1,10 +1,8 @@
-type GetReactionsRequest = {
-	id: number
-}
+type GetReactionsRequest = void
 
 type GetReactionsResponse = {
-	userId: number
-	emoji: string
+	messageId: number
+	reactions: { [emoji: string]: string[] }[]
 }[]
 
 type AddMessageReactionRequest = {

@@ -32,7 +32,7 @@ export const experiences: Experience[] = [
 		url: 'https://www.wedevx.co',
 		positions: [
 			{
-				title: 'Middle Software Development Engineer',
+				title: 'Software Development Engineer II',
 				period: {
 					startDate: '2024-02-01',
 					endDate: 'Present',

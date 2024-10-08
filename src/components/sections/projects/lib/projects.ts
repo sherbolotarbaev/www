@@ -21,7 +21,7 @@ export const projects: Project[] = [
 			'Redis',
 		],
 		image: '/images/chinatradex.png',
-		url: 'https://chinatradex.sherbolotarbaev.co',
+		url: 'https://www.chinatradex.co',
 	},
 	{
 		title: 'Personal API',
