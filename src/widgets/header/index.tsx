@@ -32,7 +32,7 @@ const Header = () => {
 							</div>
 						) : !me ? (
 							<div className='flex items-center gap-2'>
-								<Link href='/sign-in' target='_blank' passHref>
+								<Link href='/sign-in' passHref>
 									<Button variant='outline'>Sign in</Button>
 								</Link>
 								<Link href='/cv/sherbolot-arbaev.pdf' target='_blank' passHref>
