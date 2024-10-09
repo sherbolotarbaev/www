@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function SignIn() {
 	return (
-		<div className='px-5 min-h-screen flex items-center justify-center'>
+		<div className='px-5 min-h-screen flex-1 flex justify-center items-center'>
 			<Suspense>
 				<SignInForm />
 			</Suspense>

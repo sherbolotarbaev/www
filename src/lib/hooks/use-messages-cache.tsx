@@ -93,7 +93,12 @@ function useMessageCache() {
 		async (messageId: number, newBody: string) => {
 			const updatedMessages = messages.map(message =>
 				message.id === messageId
-					? { ...message, body: newBody, isEdited: true }
+					? {
+							...message,
+							body: newBody,
+							isEdited: true,
+							updatedAt: new Date().toString(),
+					  }
 					: message
 			)
 
@@ -154,6 +159,7 @@ function useMessageCache() {
 				isEdited: false,
 				author: {
 					name: me.name,
+					surname: me.surname,
 					email: me.email,
 					photo: me.photo || '',
 					isVerified: me.isVerified,

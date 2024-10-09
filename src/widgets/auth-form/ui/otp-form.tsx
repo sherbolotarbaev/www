@@ -8,7 +8,7 @@ import { useSignInMutation } from 'api/auth'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { Form, FormControl, FormField, FormItem, FormMessage } from 'ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from 'ui/input-otp'
 
@@ -60,7 +60,8 @@ const OtpForm: React.FC<OtpFormProps> = ({ email, setStep }) => {
 								<InputOTP
 									{...field}
 									maxLength={6}
-									pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+									pattern={REGEXP_ONLY_DIGITS}
+									inputMode='numeric'
 									onComplete={otp => onSubmit({ otp })}
 									disabled={isLoading || isSuccess}
 									render={({ slots }) => (
@@ -82,7 +83,7 @@ const OtpForm: React.FC<OtpFormProps> = ({ email, setStep }) => {
 
 							{error ? (
 								<FormMessage className='text-error flex justify-center gap-1'>
-									<CircleAlert className='pt-0.5 size-4' /> {error}
+									<CircleAlert className='pt-0.6 size-4' /> {error}
 								</FormMessage>
 							) : (
 								<FormMessage className='text-error text-center' />

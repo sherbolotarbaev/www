@@ -26,19 +26,19 @@ const Header = () => {
 				<div className='flex flex-1 items-center justify-end'>
 					<nav className='flex items-center gap-4'>
 						{isLoading ? (
-							<>
+							<div className='flex items-center gap-2'>
 								<Skeleton className='h-10 w-[4.5rem]' />
-								<Skeleton className='h-10 w-[7.5rem]' />
-							</>
+								<Skeleton className='h-10 w-[7.2rem]' />
+							</div>
 						) : !me ? (
-							<>
+							<div className='flex items-center gap-2'>
 								<Link href='/sign-in' target='_blank' passHref>
 									<Button variant='outline'>Sign in</Button>
 								</Link>
 								<Link href='/cv/sherbolot-arbaev.pdf' target='_blank' passHref>
 									<Button>Download CV</Button>
 								</Link>
-							</>
+							</div>
 						) : null}
 
 						<MobileMenu me={me} />

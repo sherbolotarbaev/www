@@ -110,8 +110,8 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 				transition: { duration: 0.5 },
 			}}
 		>
-			<Card className='mb-6 overflow-hidden shadow-sm'>
-				<CardHeader className='flex flex-row items-start justify-between space-y-0 p-4'>
+			<Card className='mb-6 overflow-hidden border'>
+				<CardHeader className='p-3 flex flex-row items-start justify-between space-y-0'>
 					<div className='flex items-center space-x-4'>
 						<Avatar className='size-9 rounded-md overflow-hidden'>
 							<AvatarImage src={entry.author.photo} alt={entry.author.name} />
@@ -120,7 +120,8 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 
 						<div>
 							<p className='text-sm font-semibold flex items-center gap-1'>
-								{entry.author.name} {entry.author.isVerified && <MdVerified />}
+								{entry.author.name} {entry.author.surname.charAt(0)}.
+								{entry.author.isVerified && <MdVerified />}
 							</p>
 							<p className='text-xs text-muted-foreground'>
 								{entry.isEdited
@@ -142,7 +143,7 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 					)}
 				</CardHeader>
 
-				<CardContent className='p-4'>
+				<CardContent className='p-3'>
 					{isEditing ? (
 						<div className='space-y-2'>
 							<Input
@@ -171,7 +172,7 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 
 				<Separator />
 
-				<CardFooter className='p-4 flex justify-between items-start gap-1'>
+				<CardFooter className='p-3 flex justify-between items-start gap-1'>
 					{reactionCounts.size > 0 ? (
 						<div className='flex items-center gap-1 flex-wrap'>
 							{Array.from(reactionCounts.entries()).map(([emoji, count]) => {
@@ -192,7 +193,7 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 														variant='outline'
 														size='sm'
 														className={cn(
-															'flex items-center rounded-xl space-x-1',
+															'flex items-center rounded-xl space-x-1 px-2.5',
 															userReactions.has(emoji) &&
 																'bg-secondary hover:bg-secondary',
 															!me && 'cursor-default hover:bg-transparent'
@@ -211,10 +212,30 @@ const MessageEntry: React.FC<MessageEntryProps> = ({
 													</Button>
 												</TooltipTrigger>
 
-												{reactedNames.length > 0 && (
-													<TooltipContent>
+												{reactedNames.length > 0 && me && (
+													<TooltipContent className='max-w-44 px-2 text-center'>
 														<p className='text-muted-foreground'>
-															{reactedNames.join(', ')}
+															{reactedNames.length > 1 ? (
+																<>
+																	<span className='text-primary'>
+																		{reactedNames
+																			.slice(0, reactedNames.length - 1)
+																			.join(', ')}{' '}
+																		and{' '}
+																	</span>
+																	<span className='text-primary'>
+																		{reactedNames[reactedNames.length - 1]}
+																	</span>{' '}
+																	reacted with {emoji}
+																</>
+															) : (
+																<>
+																	<span className='text-primary'>
+																		{reactedNames.join(', ')}
+																	</span>{' '}
+																	reacted with {emoji}
+																</>
+															)}
 														</p>
 													</TooltipContent>
 												)}

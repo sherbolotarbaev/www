@@ -24,6 +24,7 @@ type UserMetaData = {
 
 type GuestbookMessageAuthor = {
 	name: string
+	surname: string
 	email: string
 	photo: string
 	isVerified: boolean
