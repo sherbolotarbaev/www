@@ -1,6 +1,7 @@
 'use client'
 
 import { useGetMeQuery } from 'api/me'
+import { usePathname } from 'next/navigation'
 
 import ModeToggle from 'components/mode-toggle'
 import Link from 'next/link'
@@ -12,6 +13,7 @@ import NavLinks from './ui/nav-links'
 import UserNav from './ui/user-nav'
 
 const Header = () => {
+	const pathname = usePathname()
 	const { data: me, isLoading } = useGetMeQuery()
 
 	return (
@@ -32,7 +34,12 @@ const Header = () => {
 							</div>
 						) : !me ? (
 							<div className='flex items-center gap-2'>
-								<Link href='/sign-in' passHref>
+								<Link
+									href={
+										pathname !== '/' ? `/sign-in?next=${pathname}` : '/sign-in'
+									}
+									passHref
+								>
 									<Button variant='outline'>Sign in</Button>
 								</Link>
 								<Link href='/cv/sherbolot-arbaev.pdf' target='_blank' passHref>
