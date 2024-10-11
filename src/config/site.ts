@@ -7,5 +7,5 @@ interface ISiteConfig {
 export const siteConfig: ISiteConfig = {
 	title: 'Sherbolot Arbaev',
 	description: 'Software Engineer | Full Stack Developer',
-	url: 'http://localhost:3000',
+	url: 'https://www.sherbolotarbaev.co',
 }
