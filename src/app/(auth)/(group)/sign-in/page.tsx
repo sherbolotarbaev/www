@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
+import GoogleOneTap from 'shared/ui/google-one-tab-sign-in'
 import { SignInForm } from 'widgets/auth-form'
 
 export const metadata: Metadata = {
@@ -13,6 +14,8 @@ export default function SignIn() {
 			<Suspense>
 				<SignInForm />
 			</Suspense>
+
+			<GoogleOneTap />
 		</div>
 	)
 }
