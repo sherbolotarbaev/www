@@ -87,122 +87,126 @@ export default function AccountClient({ me }: Readonly<AccountClientProps>) {
 	}
 
 	return (
-		<div className='container mt-12'>
-			<h1 className='text-2xl font-bold mb-6'>Account</h1>
+		<>
+			<div className='container mt-12'>
+				<h1 className='text-2xl font-bold mb-6'>Account</h1>
 
-			<form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
-				<Card className='shadow-sm'>
-					<CardHeader>
-						<CardTitle>Avatar</CardTitle>
-						<CardDescription>
-							Click on the avatar to upload a new image
-						</CardDescription>
-					</CardHeader>
+				<form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
+					<Card className='shadow-sm'>
+						<CardHeader>
+							<CardTitle>Avatar</CardTitle>
+							<CardDescription>
+								Click on the avatar to upload a new image
+							</CardDescription>
+						</CardHeader>
 
-					<CardContent className='flex items-center space-x-4'>
-						<Label htmlFor='avatar-upload' className='cursor-pointer'>
-							<Avatar className='size-24'>
-								<AvatarImage src={avatar} alt='Profile picture' />
-								<AvatarFallback>
-									{me.name[0]}
-									{me.surname[0]}
-								</AvatarFallback>
-							</Avatar>
-						</Label>
-
-						<div>
-							<Label
-								htmlFor='avatar-upload'
-								className={cn(
-									isUploading ? 'cursor-not-allowed' : 'cursor-pointer'
-								)}
-							>
-								<div
-									className={cn(
-										'flex items-center space-x-2 text-sm text-blue-500',
-										!isUploading && 'hover:text-blue-600'
-									)}
-								>
-									{isUploading ? (
-										<Loader2 className='h-4 w-4 animate-spin' />
-									) : (
-										<Upload size={16} />
-									)}
-									<span>
-										{isUploading ? 'Uploading...' : 'Upload new avatar'}
-									</span>
-								</div>
+						<CardContent className='flex items-center space-x-4'>
+							<Label htmlFor='avatar-upload' className='cursor-pointer'>
+								<Avatar className='size-24'>
+									<AvatarImage src={avatar} alt='Profile picture' />
+									<AvatarFallback>
+										{me.name[0]}
+										{me.surname[0]}
+									</AvatarFallback>
+								</Avatar>
 							</Label>
 
-							<Input
-								id='avatar-upload'
-								type='file'
-								className='hidden'
-								accept='image/*'
-								onChange={handleAvatarChange}
-								disabled={isUploading}
-							/>
-						</div>
-					</CardContent>
-				</Card>
+							<div>
+								<Label
+									htmlFor='avatar-upload'
+									className={cn(
+										isUploading ? 'cursor-not-allowed' : 'cursor-pointer'
+									)}
+								>
+									<div
+										className={cn(
+											'flex items-center space-x-2 text-sm text-blue-500',
+											!isUploading && 'hover:text-blue-600'
+										)}
+									>
+										{isUploading ? (
+											<Loader2 className='h-4 w-4 animate-spin' />
+										) : (
+											<Upload size={16} />
+										)}
+										<span>
+											{isUploading ? 'Uploading...' : 'Upload new avatar'}
+										</span>
+									</div>
+								</Label>
 
-				<Card className='shadow-sm'>
-					<CardHeader>
-						<CardTitle>Personal Information</CardTitle>
-						<CardDescription>Update your name and surname</CardDescription>
-					</CardHeader>
+								<Input
+									id='avatar-upload'
+									type='file'
+									className='hidden'
+									accept='image/*'
+									onChange={handleAvatarChange}
+									disabled={isUploading}
+								/>
+							</div>
+						</CardContent>
+					</Card>
 
-					<CardContent className='space-y-4'>
-						<div className='space-y-2'>
-							<Label htmlFor='name'>Name</Label>
-							<Input
-								id='name'
-								{...register('name')}
-								aria-invalid={errors.name ? 'true' : 'false'}
-								disabled={isUpdating}
-							/>
-							{errors.name && (
-								<p className='text-sm text-red-500'>{errors.name.message}</p>
-							)}
-						</div>
+					<Card className='shadow-sm'>
+						<CardHeader>
+							<CardTitle>Personal Information</CardTitle>
+							<CardDescription>Update your name and surname</CardDescription>
+						</CardHeader>
 
-						<div className='space-y-2'>
-							<Label htmlFor='surname'>Surname</Label>
-							<Input
-								id='surname'
-								{...register('surname')}
-								aria-invalid={errors.surname ? 'true' : 'false'}
-								disabled={isUpdating}
-							/>
-							{errors.surname && (
-								<p className='text-sm text-red-500'>{errors.surname.message}</p>
-							)}
-						</div>
-					</CardContent>
-				</Card>
+						<CardContent className='space-y-4'>
+							<div className='space-y-2'>
+								<Label htmlFor='name'>Name</Label>
+								<Input
+									id='name'
+									{...register('name')}
+									aria-invalid={errors.name ? 'true' : 'false'}
+									disabled={isUpdating}
+								/>
+								{errors.name && (
+									<p className='text-sm text-red-500'>{errors.name.message}</p>
+								)}
+							</div>
 
-				<Card className='shadow-sm'>
-					<CardHeader>
-						<CardTitle>Email Address</CardTitle>
-						<CardDescription>You can't change your email</CardDescription>
-					</CardHeader>
+							<div className='space-y-2'>
+								<Label htmlFor='surname'>Surname</Label>
+								<Input
+									id='surname'
+									{...register('surname')}
+									aria-invalid={errors.surname ? 'true' : 'false'}
+									disabled={isUpdating}
+								/>
+								{errors.surname && (
+									<p className='text-sm text-red-500'>
+										{errors.surname.message}
+									</p>
+								)}
+							</div>
+						</CardContent>
+					</Card>
 
-					<CardContent>
-						<Input id='email' type='email' defaultValue={me.email} disabled />
-					</CardContent>
-				</Card>
+					<Card className='shadow-sm'>
+						<CardHeader>
+							<CardTitle>Email Address</CardTitle>
+							<CardDescription>You can't change your email</CardDescription>
+						</CardHeader>
 
-				<Button type='submit' disabled={isUpdating || !isDirty}>
-					{isUpdating ? (
-						<>
-							<Loader2 className='mr-2 h-4 w-4 animate-spin' />
-							Saving...
-						</>
-					) : (
-						'Save Changes'
-					)}
-				</Button>
-			</form>
-		</div>
+						<CardContent>
+							<Input id='email' type='email' defaultValue={me.email} disabled />
+						</CardContent>
+					</Card>
+
+					<Button type='submit' disabled={isUpdating || !isDirty}>
+						{isUpdating ? (
+							<>
+								<Loader2 className='mr-2 h-4 w-4 animate-spin' />
+								Saving...
+							</>
+						) : (
+							'Save Changes'
+						)}
+					</Button>
+				</form>
+			</div>
+		</>
 	)
 }

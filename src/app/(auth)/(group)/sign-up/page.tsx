@@ -9,10 +9,12 @@ export const metadata: Metadata = {
 
 export default function SignUp() {
 	return (
-		<div className='px-5 min-h-screen flex items-center justify-center'>
-			<Suspense>
-				<SignUpForm />
-			</Suspense>
-		</div>
+		<>
+			<div className='px-5 min-h-screen flex items-center justify-center'>
+				<Suspense>
+					<SignUpForm />
+				</Suspense>
+			</div>
+		</>
 	)
 }

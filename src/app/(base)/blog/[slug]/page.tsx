@@ -119,61 +119,63 @@ export default async function BlogPost({
 	}
 
 	return (
-		<div className='container'>
-			<Script
-				id='blog-post-schema'
-				type='application/ld+json'
-				strategy='beforeInteractive'
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-			/>
+		<>
+			<div className='container'>
+				<Script
+					id='blog-post-schema'
+					type='application/ld+json'
+					strategy='beforeInteractive'
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				/>
 
-			<BlogPostBreadcrumb title={title} slug={slug} />
+				<BlogPostBreadcrumb title={title} slug={slug} />
 
-			<div className='w-full flex flex-col lg:flex-row lg:gap-6'>
-				<article className='max-w-[34.5rem]'>
-					<header className='mb-8 flex flex-col gap-4'>
-						<h1 className='text-4xl font-bold'>{title}</h1>
+				<div className='w-full flex flex-col lg:flex-row lg:gap-6'>
+					<article className='max-w-[34.5rem]'>
+						<header className='mb-8 flex flex-col gap-4'>
+							<h1 className='text-4xl font-bold'>{title}</h1>
 
-						<div className='flex justify-between md:items-center'>
-							<BlogPostMeta
-								variant='detailed'
-								formattedDate={formattedDate}
-								distance={distance}
-								readingTime={readingTime}
-								allViews={allViews}
-								slug={slug}
-							/>
+							<div className='flex justify-between md:items-center'>
+								<BlogPostMeta
+									variant='detailed'
+									formattedDate={formattedDate}
+									distance={distance}
+									readingTime={readingTime}
+									allViews={allViews}
+									slug={slug}
+								/>
 
-							<ShareButton />
+								<ShareButton />
+							</div>
+
+							{image && (
+								<Image
+									src={image}
+									alt={title}
+									width={700}
+									height={350}
+									loading='lazy'
+									className='w-full rounded-xl border'
+									placeholder='blur'
+									blurDataURL={imageBlurData}
+								/>
+							)}
+
+							<p>{summary}</p>
+						</header>
+
+						<div className='prose lg:prose-xl'>
+							<MDXContent source={content} />
 						</div>
+					</article>
 
-						{image && (
-							<Image
-								src={image}
-								alt={title}
-								width={700}
-								height={350}
-								loading='lazy'
-								className='w-full rounded-xl border'
-								placeholder='blur'
-								blurDataURL={imageBlurData}
-							/>
-						)}
-
-						<p>{summary}</p>
-					</header>
-
-					<div className='prose lg:prose-xl'>
-						<MDXContent source={content} />
-					</div>
-				</article>
-
-				{!isMobile && (
-					<aside>
-						<BlogPostContentNavigation />
-					</aside>
-				)}
+					{!isMobile && (
+						<aside>
+							<BlogPostContentNavigation />
+						</aside>
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	)
 }
