@@ -1,8 +1,12 @@
-import MDXContent from 'components/mdx-content'
 import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+import MDXContent from 'components/mdx-content'
 
 export default async function PrivacyPolicy() {
-	const content = readFileSync('./public/privacy-policy.mdx', 'utf8')
+	const filePath = join(process.cwd(), 'public', 'privacy-policy.mdx')
+	const content = readFileSync(filePath, 'utf8')
+
 	return (
 		<>
 			<div className='container'>
