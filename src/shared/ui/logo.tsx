@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { cn } from 'utils'
 
 interface LogoProps {
-	size?: string
+	size?: number
 	className?: string
 }
 

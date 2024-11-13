@@ -26,8 +26,17 @@ export const SignInForm = () => {
 	return (
 		<Card className='w-full max-w-sm mx-auto border-none shadow-none'>
 			<CardHeader className='px-0'>
-				<CardTitle className='text-3xl font-bold text-center'>
-					{step === 'email' ? 'Sign in with your account' : 'Verification'}
+				<CardTitle className='text-3xl font-bold text-center md:text-4xl'>
+					{step === 'email' ? (
+						<>
+							Sign in to{' '}
+							<span className='bg-gradient-to-r from-blue-950 to-blue-500 bg-clip-text text-transparent'>
+								sherbolotarbaev.co
+							</span>
+						</>
+					) : (
+						'Verification'
+					)}
 				</CardTitle>
 				{step === 'otp' && (
 					<CardDescription className='text-center text-primary'>
