@@ -30,7 +30,7 @@ export const SignInForm = () => {
 					{step === 'email' ? (
 						<>
 							Sign in to{' '}
-							<span className='bg-gradient-to-r from-blue-950 to-blue-500 bg-clip-text text-transparent'>
+							<span className='bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent'>
 								sherbolotarbaev.co
 							</span>
 						</>
