@@ -20,7 +20,11 @@ export async function middleware(request: NextRequest) {
 
 	const next = decodeURIComponent(searchParams.get('next') ?? '/')
 
-	if (pathname.startsWith('/images') || pathname === '/favicon.ico') {
+	if (
+		pathname.startsWith('/images') ||
+		pathname.startsWith('/cv') ||
+		pathname === '/favicon.ico'
+	) {
 		return response
 	}
 
@@ -56,7 +60,9 @@ export async function middleware(request: NextRequest) {
 			if (me.email) {
 				user = me
 			}
-		} catch (_) {}
+		} catch (_) {
+			responseCookies.delete(session)
+		}
 	}
 
 	if (user && (pathname === '/sign-in' || pathname === '/sign-up')) {

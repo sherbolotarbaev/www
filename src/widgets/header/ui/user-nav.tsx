@@ -161,8 +161,8 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 	}
 
 	return (
-		<Link href='/account' className='mt-5'>
-			<div className='flex items-center justify-between'>
+		<div className='mt-5 flex items-center justify-between'>
+			<Link href='/account' passHref>
 				<div className='flex items-center gap-3'>
 					<Avatar className='size-10 rounded-md'>
 						<AvatarImage src={me.photo} alt={`${me.name} ${me.surname}`} />
@@ -181,18 +181,18 @@ export const MobileUserNav: React.FC<UserNavProps> = ({ me }) => {
 						<p className='text-xs text-muted-foreground'>{me.email}</p>
 					</div>
 				</div>
+			</Link>
 
-				<Button
-					variant='ghost'
-					size='icon'
-					className='ml-2'
-					disabled={isLoggingOut}
-					onClick={handleLogout}
-				>
-					<LogOut className='size-3.5' />
-				</Button>
-			</div>
-		</Link>
+			<Button
+				variant='ghost'
+				size='icon'
+				className='ml-2'
+				disabled={isLoggingOut}
+				onClick={handleLogout}
+			>
+				<LogOut className='size-3.5' />
+			</Button>
+		</div>
 	)
 }
 

@@ -20,7 +20,7 @@ import { Input } from 'ui/input'
 import { Label } from 'ui/label'
 
 import { Loader2, Upload } from 'lucide-react'
-import { cn } from '~/lib/utils'
+import { cn } from 'utils'
 
 const formSchema = z.object({
 	name: z.string().min(2, 'Name must be at least 2 characters'),

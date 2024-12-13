@@ -1,4 +1,4 @@
-type Position = {
+export type TPosition = {
 	title: string
 	period: {
 		startDate: string | string
@@ -9,7 +9,7 @@ type Position = {
 	skills: string[]
 }
 
-export type Experience = {
+export type TExperience = {
 	company: string
 	duration: {
 		startDate: string
@@ -17,11 +17,11 @@ export type Experience = {
 		totalDuration?: string
 	}
 	location: string
-	positions: Position[]
+	positions: TPosition[]
 	url: string
 }
 
-export const experiences: Experience[] = [
+export const experiences: TExperience[] = [
 	{
 		company: 'WEDEVX',
 		duration: {
@@ -37,7 +37,11 @@ export const experiences: Experience[] = [
 					startDate: '2024-02-01',
 					endDate: 'Present',
 				},
-				description: `Led development of NestJS microservices, increasing system performance by 99% through batching and Prisma optimizations. Improved query efficiency by refining system architecture, reducing database processing time from 7 minutes to 7 seconds.`,
+				description: `Led development of NestJS microservices, increasing system performance by 99% through batching and Prisma optimizations. Improved query efficiency by refining system architecture, reducing database processing time from 7 minutes to 7 seconds.
+				
+				<br/><br/>
+				
+				(WEDEVX AI) Built an AI assistant that helps solve exercises, tracks progress, and provides personalized support.`,
 				skills: [
 					'Systems Design',
 					'Code Review',
@@ -154,15 +158,18 @@ const formatDate = (date: Date | 'Present') => {
 	return date.toLocaleString('default', { month: 'short', year: 'numeric' })
 }
 
-export const formatExperiences = (experiences: Experience[]) => {
+export const formatExperiences = (experiences: TExperience[]) => {
 	return experiences.map(experience => {
 		const updatedPositions = experience.positions.map(position => {
 			const startDate = new Date(position.period.startDate)
 			const endDate =
 				position.period.endDate === 'Present'
-					? new Date()
+					? 'Present'
 					: new Date(position.period.endDate)
-			const duration = calculateDuration(new Date(startDate), endDate as Date)
+			const duration = calculateDuration(
+				new Date(startDate),
+				endDate === 'Present' ? new Date() : endDate
+			)
 
 			return {
 				...position,
@@ -177,9 +184,12 @@ export const formatExperiences = (experiences: Experience[]) => {
 		const startDate = new Date(experience.duration.startDate)
 		const endDate =
 			experience.duration.endDate === 'Present'
-				? new Date()
+				? 'Present'
 				: new Date(experience.duration.endDate)
-		const totalDuration = calculateDuration(startDate, endDate as Date)
+		const totalDuration = calculateDuration(
+			startDate,
+			endDate === 'Present' ? new Date() : endDate
+		)
 
 		return {
 			...experience,

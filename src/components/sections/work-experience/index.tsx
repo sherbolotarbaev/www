@@ -13,7 +13,7 @@ import { Separator } from 'ui/separator'
 import { Link2Icon } from '@radix-ui/react-icons'
 
 import {
-	type Experience,
+	type TExperience,
 	experiences,
 	formatExperiences,
 } from './lib/experiences'
@@ -75,7 +75,7 @@ const WorkExperience = () => {
 
 export default WorkExperience
 
-const ExperienceCard: React.FC<Experience> = ({
+const ExperienceCard: React.FC<TExperience> = ({
 	company,
 	duration,
 	location,
